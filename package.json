@@ -1,0 +1,146 @@
+{
+  "name": "react-native-skia-charts",
+  "version": "0.0.41",
+  "description": "test",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index",
+  "files": [
+    "src",
+    "lib",
+    "README.md"
+  ],
+  "scripts": {
+    "fresh": "rm -rf node_modules && npm i",
+    "typescript": "tsc --noEmit",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepare": "bob build",
+    "release": "release-it",
+    "example": "yarn --cwd example",
+    "bootstrap": "yarn example && yarn install"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": "https://github.com/vladanyes/react-native-skia-charts",
+  "author": "Vlad R <ryabinin.dev@gmail.com> (https://github.com/vladanyes)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vladanyes/react-native-skia-charts/issues"
+  },
+  "homepage": "https://github.com/vladanyes/react-native-skia-charts#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@arkweid/lefthook": "^0.7.7",
+    "@commitlint/config-conventional": "^17.0.2",
+    "@react-native-community/eslint-config": "^3.0.2",
+    "@release-it/conventional-changelog": "^5.0.0",
+    "@shopify/react-native-skia": "0.1.136",
+    "@types/d3-scale": "^4.0.2",
+    "@types/d3-shape": "^3.1.0",
+    "@types/react": "^17.0.42",
+    "@types/react-native": "^0.67.4",
+    "commitlint": "^17.0.2",
+    "d3-scale": "^4.0.2",
+    "d3-shape": "^3.2.0",
+    "dayjs": "^1.11.7",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "pod-install": "^0.1.0",
+    "prettier": "^2.0.5",
+    "react": "^17.0.2",
+    "react-native": "^0.67.4",
+    "react-native-builder-bob": "^0.18.0",
+    "react-native-gesture-handler": "^2.5.0",
+    "react-native-reanimated": "^2.9.1",
+    "release-it": "^14.2.2",
+    "typescript": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@shopify/react-native-skia": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": ">=2",
+    "react-native-reanimated": ">=2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "es5",
+          "useTabs": false
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "commonjs",
+        {
+          "configFile": true,
+          "copyFlow": true
+        }
+      ],
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.json"
+        }
+      ]
+    ]
+  }
+}
