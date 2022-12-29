@@ -13,8 +13,9 @@ npm install react-native-skia-charts
 ## Chart types
  - Line chart (draft state)
  - Stacked Bar chart (in progress)
- - Bar chart (in progress)
  - Tooltip (in progress)
+ - Multiple lines chart (todo)
+ - Bar chart (todo)
 
 ## Contributing
 

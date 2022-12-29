@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Easing } from 'react-native';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Easing, LayoutChangeEvent, View } from 'react-native';
 import {
   Canvas,
   clamp,
@@ -13,7 +13,7 @@ import {
   useValue,
 } from '@shopify/react-native-skia';
 import { scaleLinear } from 'd3-scale';
-import { curveNatural, line } from 'd3-shape';
+import { curveCardinal, line } from 'd3-shape';
 import dayjs from 'dayjs';
 import {
   CHART_FONT_SIZE,
@@ -22,57 +22,74 @@ import {
   CHART_LINE_COLOR,
   CHART_VERTICAL_MARGIN,
   CHART_WIDTH,
-  CHART_YLABELS_HORIZONTAL_MARGIN,
 } from './constants';
 import { getXLabel, getXLabelsInterval, getYLabels } from './helpers';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import type { ChartPoint } from './types';
 
-const xScaleRange: readonly [number, number] = [
-  CHART_HORIZONTAL_MARGIN + 15,
-  CHART_WIDTH - CHART_HORIZONTAL_MARGIN,
-] as const;
-const chartHeight = CHART_HEIGHT - CHART_VERTICAL_MARGIN;
-const canvasStyles = {
-  width: CHART_WIDTH,
-  height: CHART_HEIGHT,
-};
-
+// todo move to types file
 interface IProps {
   yAxisMax: number;
   startDate: Date;
   endDate: Date;
-  isFetching?: boolean;
+  isLoading?: boolean;
   labelsColor?: string;
+  fontPath?: string;
+  fontSize?: number;
+  canvasHeight?: number;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
+  tension?: number;
   data: ChartPoint[];
 }
 
+// fontMedium,
 export const SkiaLineChart = memo(
   ({
     yAxisMax = 1,
     labelsColor = 'black',
-    isFetching = false,
+    isLoading = false,
     startDate,
     endDate,
+    fontSize = CHART_FONT_SIZE,
+    paddingHorizontal = CHART_HORIZONTAL_MARGIN,
+    paddingVertical = CHART_VERTICAL_MARGIN,
+    tension = 0.5,
     data = [],
-  }: // font,
-  // chartHeight,
-  // fontMedium,
-  // yLabels,
-  // xScaleRange,
-  // x,
+  }: // x,
   IProps) => {
     const setIsSwipeEnabled = (arg: boolean) => arg;
+    const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
+    const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
     const font = useFont(
-      require('../public/fons/Roboto-Regular.ttf'),
-      CHART_FONT_SIZE
+      require('../assets/fonts/Roboto-Regular.ttf'),
+      fontSize
     );
+
+    const xScaleRange = [
+      paddingHorizontal,
+      canvasWidth - paddingHorizontal,
+    ] as const;
+    const chartHeight = canvasHeight - paddingVertical;
+    const canvasStyles = {
+      width: canvasWidth,
+      height: canvasHeight,
+    };
+
     // x position of the cursor
     const x = useValue<number>(xScaleRange[0]);
-    const yLabels = getYLabels('GB', yAxisMax);
+    const yLabels = getYLabels(yAxisMax);
     // const { panGestureRef, isLinesUsageChartShown, setIsSwipeEnabled } = props;
+
+    const onLayout = useCallback(
+      ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
+        setCanvasWidth(Math.round(layout.width));
+        setCanvasHeight(Math.round(layout.height));
+      },
+      [setCanvasWidth]
+    );
 
     // chart touch handlers
     const handleStart = (event: { x: number }) => {
@@ -139,29 +156,29 @@ export const SkiaLineChart = memo(
 
     useEffect(() => {
       // this useEffect is responsible for toggling chart
-      if (!isFetching && !isLineAnimationRunning.current) {
+      if (!isLoading && !isLineAnimationRunning.current) {
         lineAnimationState.current = 0;
         isLineAnimationRunning.current = true;
         setTimeout(animateLine, 0);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [startDate, isFetching]);
+    }, [startDate, isLoading]);
 
     const curvedLine = data.length
       ? line<ChartPoint>()
           .x((d) => xScale(dayjs(d.date).valueOf()))
           .y((d) => yScale(d.value))
-          .curve(curveNatural)(data)
+          .curve(curveCardinal.tension(tension))(data)
       : '';
 
     const chartPath = Skia.Path.MakeFromSVGString(curvedLine!);
 
     return (
       <GestureDetector gesture={panGesture}>
-        <Canvas style={canvasStyles}>
-          {!font ? null : (
+        <View style={{ flex: 1 }} onLayout={onLayout}>
+          <Canvas style={canvasStyles}>
             <Group>
-              {!isFetching && chartPath && (
+              {!isLoading && chartPath && (
                 <Path
                   style="stroke"
                   path={chartPath}
@@ -173,50 +190,52 @@ export const SkiaLineChart = memo(
                   end={lineAnimationState}
                 />
               )}
-              {yLabels.map((label: string | number, idx: number, array) => {
-                const isString = typeof label === 'string';
-                const isLastItem = idx === array.length - 1;
-                const yPoint = isString ? yScale(0) : yScale(label);
+              {font &&
+                yLabels.map((label: string | number, idx: number, array) => {
+                  const isString = typeof label === 'string';
+                  const isLastItem = idx === array.length - 1;
+                  const yPoint = isString ? yScale(0) : yScale(label);
 
-                return (
-                  <Group key={label}>
+                  return (
+                    <Group key={label}>
+                      <Text
+                        color={labelsColor}
+                        font={font}
+                        x={0}
+                        y={isLastItem ? yPoint + 3 : yPoint}
+                        text={isString ? label : label.toFixed(1)}
+                      />
+                      <Path
+                        color="lightgrey"
+                        style="stroke"
+                        strokeWidth={1}
+                        path={`M${xScaleRange[0]},${yPoint} L${xScaleRange[1]},${yPoint}`}
+                      >
+                        <DashPathEffect intervals={[5, 10]} />
+                      </Path>
+                    </Group>
+                  );
+                })}
+
+              {font &&
+                data.map((dataPoint, idx: number) => (
+                  <Group color={labelsColor} key={`${dataPoint.date}-xAxis`}>
                     <Text
-                      color={labelsColor}
                       font={font}
-                      x={CHART_YLABELS_HORIZONTAL_MARGIN}
-                      y={isLastItem ? yPoint + 3 : yPoint}
-                      text={isString ? label : label.toFixed(1)}
+                      x={xScale(dayjs(dataPoint.date).valueOf()) - 4}
+                      y={canvasHeight}
+                      text={getXLabel({
+                        idx,
+                        date: dataPoint.date,
+                        xLabelsInterval,
+                        totalCount,
+                      })}
                     />
-                    <Path
-                      color="lightgrey"
-                      style="stroke"
-                      strokeWidth={1}
-                      path={`M${xScaleRange[0]},${yPoint} L${xScaleRange[1]},${yPoint}`}
-                    >
-                      <DashPathEffect intervals={[5, 10]} />
-                    </Path>
                   </Group>
-                );
-              })}
-
-              {data.map((dataPoint, idx: number) => (
-                <Group color={labelsColor} key={`${dataPoint.date}-xAxis`}>
-                  <Text
-                    font={font}
-                    x={xScale(dayjs(dataPoint.date).valueOf()) - 4}
-                    y={chartHeight + CHART_VERTICAL_MARGIN}
-                    text={getXLabel({
-                      idx,
-                      date: dataPoint.date,
-                      xLabelsInterval,
-                      totalCount,
-                    })}
-                  />
-                </Group>
-              ))}
+                ))}
             </Group>
-          )}
-        </Canvas>
+          </Canvas>
+        </View>
       </GestureDetector>
     );
   }

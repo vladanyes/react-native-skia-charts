@@ -10,19 +10,14 @@ export const getXLabelsInterval = (totalXGraphCount: number): number => {
   return xGraphInterval;
 };
 
-export const getYLabels = (
-  units: string = 'MB',
-  maxValue: number
-): Array<string | number> => {
+export const getYLabels = (maxValue: number): Array<string | number> => {
   const fiveArr = Array.from(Array(5).keys());
   return fiveArr
     .map((item: number) => {
       if (item === 4) {
         return Number(maxValue.toFixed(1));
       }
-      if (item === 0) {
-        return units;
-      }
+      if (item === 0) return 0;
       return Math.floor((maxValue / 4) * item);
     })
     .reverse();

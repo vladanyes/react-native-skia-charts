@@ -12,17 +12,19 @@ export default function App() {
   // todo remove dayjs dependency
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={styles.container}>
+      <View style={[styles.container, { width: 250, maxHeight: 350 }]}>
         <View style={styles.buttonWrapper}>
           <Button
             title="upd chart"
-            disabled={false}
-            onPress={() => setPoints(generateRandomChartData(20))}
+            onPress={() => setPoints(generateRandomChartData(30))}
           />
         </View>
         <SkiaLineChart
+          fontSize={12}
           data={points}
           yAxisMax={20}
+          paddingVertical={30}
+          paddingHorizontal={30}
           startDate={new Date()}
           endDate={dayjs().add(20, 'days')}
         />
