@@ -3,7 +3,7 @@ import { Gesture, PanGesture } from 'react-native-gesture-handler';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 interface Params {
-  holdDuration: number;
+  holdDuration?: number;
   xScaleBounds?: readonly [number, number];
 }
 

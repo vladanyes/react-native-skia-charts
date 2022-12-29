@@ -48,9 +48,9 @@ interface IProps {
 }
 
 // fontMedium,
-export const SkiaLineChart = memo(
+export const LineChart = memo(
   ({
-    yAxisMax = 1,
+    yAxisMax = 1, // todo make dynamic
     labelsColor = 'black',
     isLoading = false,
     startDate,
@@ -78,7 +78,6 @@ export const SkiaLineChart = memo(
     };
 
     const { x, gesture, isActive } = usePanGesture({
-      holdDuration: 600,
       xScaleBounds,
     });
     const font = useFont(
@@ -231,7 +230,9 @@ export const SkiaLineChart = memo(
               </Group>
             ) : null}
 
-            {isTouchActive ? <LineChartTooltip x={x} /> : null}
+            {isTouchActive ? (
+              <LineChartTooltip x={x} chartHeight={chartHeight} />
+            ) : null}
           </Canvas>
         </View>
       </GestureDetector>

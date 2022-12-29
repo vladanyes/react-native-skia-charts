@@ -19,9 +19,9 @@ export default function App() {
             onPress={() => setPoints(generateRandomChartData(30))}
           />
         </View>
-        <SkiaLineChart
-          onTouchStart={() => console.log('onTouchStart')}
-          onTouchEnd={() => console.log('onTouchEnd')}
+        <LineChart
+          onTouchStart={() => {}}
+          onTouchEnd={() => {}}
           fontSize={12}
           data={points}
           yAxisMax={20}
