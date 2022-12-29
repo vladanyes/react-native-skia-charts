@@ -20,6 +20,8 @@ export default function App() {
           />
         </View>
         <SkiaLineChart
+          onTouchStart={() => console.log('onTouchStart')}
+          onTouchEnd={() => console.log('onTouchEnd')}
           fontSize={12}
           data={points}
           yAxisMax={20}

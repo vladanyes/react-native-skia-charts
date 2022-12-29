@@ -2,7 +2,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Easing, LayoutChangeEvent, View } from 'react-native';
 import {
   Canvas,
-  clamp,
   DashPathEffect,
   Group,
   Path,
@@ -24,9 +23,11 @@ import {
   CHART_WIDTH,
 } from './constants';
 import { getXLabel, getXLabelsInterval, getYLabels } from './helpers';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
 import type { ChartPoint } from './types';
+import { usePanGesture } from './hooks/usePanGesture';
+import LineChartTooltip from './LineChartTooltip';
 
 // todo move to types file
 interface IProps {
@@ -41,6 +42,8 @@ interface IProps {
   paddingHorizontal?: number;
   paddingVertical?: number;
   tension?: number;
+  onTouchStart: (arg: boolean) => void;
+  onTouchEnd: (arg: boolean) => void;
   data: ChartPoint[];
 }
 
@@ -56,19 +59,15 @@ export const SkiaLineChart = memo(
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
     tension = 0.5,
+    onTouchStart,
+    onTouchEnd,
     data = [],
-  }: // x,
-  IProps) => {
-    const setIsSwipeEnabled = (arg: boolean) => arg;
+  }: IProps) => {
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
-    const font = useFont(
-      require('../assets/fonts/Roboto-Regular.ttf'),
-      fontSize
-    );
 
-    const xScaleRange = [
+    const xScaleBounds = [
       paddingHorizontal,
       canvasWidth - paddingHorizontal,
     ] as const;
@@ -78,10 +77,16 @@ export const SkiaLineChart = memo(
       height: canvasHeight,
     };
 
-    // x position of the cursor
-    const x = useValue<number>(xScaleRange[0]);
+    const { x, gesture, isActive } = usePanGesture({
+      holdDuration: 600,
+      xScaleBounds,
+    });
+    const font = useFont(
+      require('../assets/fonts/Roboto-Regular.ttf'),
+      fontSize
+    );
+
     const yLabels = getYLabels(yAxisMax);
-    // const { panGestureRef, isLinesUsageChartShown, setIsSwipeEnabled } = props;
 
     const onLayout = useCallback(
       ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
@@ -91,39 +96,25 @@ export const SkiaLineChart = memo(
       [setCanvasWidth]
     );
 
-    // chart touch handlers
-    const handleStart = (event: { x: number }) => {
-      setIsTouchActive(true);
-      setIsSwipeEnabled(false);
-      handleUpdate(event);
-    };
+    const setIsTouchActiveCallbacks = useCallback(
+      (active: boolean) => {
+        if (active) {
+          onTouchStart?.(active);
+        } else {
+          onTouchEnd?.(active);
+        }
+        setIsTouchActive(active);
+      },
+      [onTouchEnd, onTouchStart]
+    );
 
-    const handleUpdate = (event: { x: number }) => {
-      x.current = clamp(event.x, xScaleRange[0], xScaleRange[1]);
-    };
-
-    const handleEnd = () => {
-      if (isTouchActive) {
-        setIsTouchActive(false);
-        setIsSwipeEnabled(true);
-      }
-    };
-
-    // we have to use Gesture.Pan() here as our chart is withing the ScrollView...
-    //   and we have to effectively manage Y axis moves.
-    //  Skia can't properly handle Y axis moves withing the ScrollView by default.
-    const panGesture = Gesture.Pan()
-      .onBegin((e) => {
-        // runOnJS is needed for calling functions in the same thread
-        runOnJS(handleStart)(e);
-      })
-      .onUpdate((e) => {
-        runOnJS(handleUpdate)(e);
-      })
-      .onFinalize(() => {
-        runOnJS(handleEnd)();
-      });
-    // .withRef(panGestureRef);
+    useAnimatedReaction(
+      () => isActive.value,
+      (active) => {
+        runOnJS(setIsTouchActiveCallbacks)(active);
+      },
+      [isActive]
+    );
 
     const lineAnimationState = useValue<number>(0);
     // having this value we are preventing re-starting line chart animation
@@ -136,7 +127,7 @@ export const SkiaLineChart = memo(
     // todo get the latest date from the data
     const xScale = scaleLinear()
       .domain([dayjs(startDate).valueOf(), dayjs(endDate).valueOf()])
-      .range(xScaleRange);
+      .range(xScaleBounds);
     const yScale = scaleLinear().domain([0, yAxisMax]).range([chartHeight, 15]);
 
     const animateLine = () => {
@@ -174,24 +165,25 @@ export const SkiaLineChart = memo(
     const chartPath = Skia.Path.MakeFromSVGString(curvedLine!);
 
     return (
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={gesture}>
         <View style={{ flex: 1 }} onLayout={onLayout}>
           <Canvas style={canvasStyles}>
-            <Group>
-              {!isLoading && chartPath && (
-                <Path
-                  style="stroke"
-                  path={chartPath}
-                  strokeWidth={3}
-                  strokeJoin="round"
-                  strokeCap="round"
-                  color={CHART_LINE_COLOR}
-                  start={0}
-                  end={lineAnimationState}
-                />
-              )}
-              {font &&
-                yLabels.map((label: string | number, idx: number, array) => {
+            {!isLoading && chartPath && (
+              <Path
+                style="stroke"
+                path={chartPath}
+                strokeWidth={3}
+                strokeJoin="round"
+                strokeCap="round"
+                color={CHART_LINE_COLOR}
+                start={0}
+                end={lineAnimationState}
+              />
+            )}
+
+            {font ? (
+              <Group>
+                {yLabels.map((label: string | number, idx: number, array) => {
                   const isString = typeof label === 'string';
                   const isLastItem = idx === array.length - 1;
                   const yPoint = isString ? yScale(0) : yScale(label);
@@ -209,16 +201,19 @@ export const SkiaLineChart = memo(
                         color="lightgrey"
                         style="stroke"
                         strokeWidth={1}
-                        path={`M${xScaleRange[0]},${yPoint} L${xScaleRange[1]},${yPoint}`}
+                        path={`M${xScaleBounds[0]},${yPoint} L${xScaleBounds[1]},${yPoint}`}
                       >
                         <DashPathEffect intervals={[5, 10]} />
                       </Path>
                     </Group>
                   );
                 })}
+              </Group>
+            ) : null}
 
-              {font &&
-                data.map((dataPoint, idx: number) => (
+            {font ? (
+              <Group>
+                {data.map((dataPoint, idx: number) => (
                   <Group color={labelsColor} key={`${dataPoint.date}-xAxis`}>
                     <Text
                       font={font}
@@ -233,7 +228,10 @@ export const SkiaLineChart = memo(
                     />
                   </Group>
                 ))}
-            </Group>
+              </Group>
+            ) : null}
+
+            {isTouchActive ? <LineChartTooltip x={x} /> : null}
           </Canvas>
         </View>
       </GestureDetector>
