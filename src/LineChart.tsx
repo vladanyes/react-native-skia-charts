@@ -9,6 +9,7 @@ import {
   Skia,
   Text,
   useFont,
+  useSharedValueEffect,
   useValue,
 } from '@shopify/react-native-skia';
 import { scaleLinear } from 'd3-scale';
@@ -25,7 +26,7 @@ import {
 import { getXLabel, getXLabelsInterval, getYLabels } from './helpers';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
-import type { ChartPoint } from './types';
+import type { ChartPoint, TooltipProps } from './types';
 import { usePanGesture } from './hooks/usePanGesture';
 import LineChartTooltip from './LineChartTooltip';
 
@@ -44,6 +45,7 @@ interface IProps {
   tension?: number;
   onTouchStart: (arg: boolean) => void;
   onTouchEnd: (arg: boolean) => void;
+  tooltip: TooltipProps;
   data: ChartPoint[];
 }
 
@@ -61,11 +63,20 @@ export const LineChart = memo(
     tension = 0.5,
     onTouchStart,
     onTouchEnd,
+    tooltip,
     data = [],
   }: IProps) => {
+    const {
+      backgroundColor: tooltipBackgroundColor,
+      setContent: setTooltipContent,
+      width: tooltipWidth,
+      height: tooltipHeight,
+      dateFormat: tooltipDateFormat,
+    } = tooltip || {};
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
+    const skiaX = useValue(0);
 
     const xScaleBounds = [
       paddingHorizontal,
@@ -77,7 +88,11 @@ export const LineChart = memo(
       height: canvasHeight,
     };
 
-    const { x, gesture, isActive } = usePanGesture({
+    const {
+      x: reanimatedX,
+      gesture,
+      isActive,
+    } = usePanGesture({
       xScaleBounds,
     });
     const font = useFont(
@@ -114,6 +129,11 @@ export const LineChart = memo(
       },
       [isActive]
     );
+
+    // connect Reanimated values to Skia values
+    useSharedValueEffect(() => {
+      skiaX.current = reanimatedX.value;
+    }, reanimatedX);
 
     const lineAnimationState = useValue<number>(0);
     // having this value we are preventing re-starting line chart animation
@@ -231,7 +251,20 @@ export const LineChart = memo(
             ) : null}
 
             {isTouchActive ? (
-              <LineChartTooltip x={x} chartHeight={chartHeight} />
+              <LineChartTooltip
+                data={data}
+                x={skiaX}
+                xScaleBounds={xScaleBounds}
+                chartHeight={chartHeight}
+                font={font}
+                setContent={setTooltipContent}
+                backgroundColor={tooltipBackgroundColor}
+                width={tooltipWidth}
+                height={tooltipHeight}
+                tooltipDateFormat={tooltipDateFormat}
+                startDate={startDate}
+                endDate={endDate}
+              />
             ) : null}
           </Canvas>
         </View>

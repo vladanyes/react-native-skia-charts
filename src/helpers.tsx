@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-// // import omit from 'lodash/omit';
-// // import { MIN_PLACEHOLDERS_COUNT } from './constants';
+import type { ChartPoint } from './types';
+// import omit from 'lodash/omit';
+// import { MIN_PLACEHOLDERS_COUNT } from './constants';
 
 export const getXLabelsInterval = (totalXGraphCount: number): number => {
   let xGraphInterval = 1;
@@ -8,6 +9,17 @@ export const getXLabelsInterval = (totalXGraphCount: number): number => {
     xGraphInterval = 2;
   }
   return xGraphInterval;
+};
+
+export const convertDataArrToObj = (
+  data: ChartPoint[],
+  dateFormat = 'MMM DD'
+) => {
+  return data.reduce((acc: Object, usage: ChartPoint) => {
+    // @ts-ignore
+    acc[dayjs(usage.date).format(dateFormat)] = usage.value;
+    return acc;
+  }, {});
 };
 
 export const getYLabels = (maxValue: number): Array<string | number> => {

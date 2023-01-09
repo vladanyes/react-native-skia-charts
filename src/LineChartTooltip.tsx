@@ -2,37 +2,69 @@ import React, { memo } from 'react';
 import {
   DashPathEffect,
   Group,
+  interpolate,
   Line,
+  SkFont,
+  SkiaMutableValue,
+  Text,
   useComputedValue,
-  useSharedValueEffect,
   useValue,
+  useValueEffect,
   vec,
 } from '@shopify/react-native-skia';
-import type Reanimated from 'react-native-reanimated';
+import dayjs from 'dayjs';
+import type { ChartPoint, TooltipProps } from './types';
+import { convertDataArrToObj } from './helpers';
+import Tooltip from './Tooltip';
 
-interface IProps {
-  x: Reanimated.SharedValue<number>;
+interface IProps extends TooltipProps {
+  x: SkiaMutableValue<number>;
+  xScaleBounds: readonly [number, number];
   chartHeight: number;
+  font: SkFont | null;
+  data: ChartPoint[];
+  startDate: Date;
+  endDate: Date;
 }
 
-const LineChartTooltip = ({ x, chartHeight }: IProps) => {
-  const translateX = useValue(0);
-
-  useSharedValueEffect(() => {
-    // todo refactor rightXBound instead of xScaleBounds[1]
-    // const xPos = clamp(x.value, xScaleBounds[0], xScaleBounds[1]);
-    // const isLeftPos = xPos + tooltipWidth.current >= xScaleRange[1];
-
-    // const translateX = isLeftPos
-    //   ? xPos - tooltipWidth.current - CHART_TOOLTIP_MARGIN * 2
-    //   : xPos + CHART_TOOLTIP_MARGIN;
-
-    translateX.current = x.value;
-  }, x);
+const LineChartTooltip = ({
+  data,
+  x,
+  xScaleBounds,
+  chartHeight,
+  font,
+  tooltipDateFormat = 'MMM D',
+  // setContent,
+  backgroundColor = 'black',
+  width = 100,
+  height = 50,
+  startDate,
+  endDate,
+}: IProps) => {
+  const dataMap = convertDataArrToObj(data, tooltipDateFormat);
+  const tooltipContentDate = useValue<string>('');
+  const tooltipContentValue = useValue<string>('');
 
   const transformTooltip = useComputedValue(() => {
-    return [{ translateX: translateX.current }];
-  }, [translateX]);
+    return [{ translateX: x.current }];
+  }, [x]);
+
+  const tooltipInterpolatedXPosition = useComputedValue(() => {
+    return interpolate(x.current, xScaleBounds, [
+      dayjs(startDate).valueOf(),
+      dayjs(endDate).valueOf(),
+    ]);
+  }, [x, startDate, endDate]);
+
+  useValueEffect(tooltipInterpolatedXPosition, () => {
+    const contentDate = dayjs(tooltipInterpolatedXPosition.current).format(
+      tooltipDateFormat
+    );
+    const contentValue = dataMap[contentDate as keyof typeof dataMap];
+
+    if (contentDate) tooltipContentDate.current = contentDate.toString();
+    if (contentValue) tooltipContentValue.current = contentValue.toString();
+  });
 
   return (
     <Group>
@@ -47,14 +79,18 @@ const LineChartTooltip = ({ x, chartHeight }: IProps) => {
           <DashPathEffect intervals={[4, 4]} />
         </Line>
       </Group>
-      {/*<Tooltip*/}
-      {/*  transform={transformTooltip}*/}
-      {/*  backgroundColor={CHART_TOOLTIP_BACKGROUND}*/}
-      {/*  tooltipWidth={tooltipWidth}*/}
-      {/*  tooltipHeight={tooltipHeight}*/}
-      {/*>*/}
-      {/*  <Drawing drawing={drawTooltipContentUsage} />*/}
-      {/*</Tooltip>*/}
+      <Tooltip
+        backgroundColor={backgroundColor}
+        tooltipWidth={width}
+        tooltipHeight={height}
+      >
+        {font ? (
+          <Group color="white">
+            <Text font={font} x={10} y={20} text={tooltipContentDate} />
+            <Text font={font} x={10} y={40} text={tooltipContentValue} />
+          </Group>
+        ) : null}
+      </Tooltip>
     </Group>
   );
 };

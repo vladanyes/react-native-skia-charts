@@ -3,10 +3,10 @@ import { Group, RoundedRect, SkiaValue } from '@shopify/react-native-skia';
 import { CHART_TOOLTIP_HEIGHT } from './constants';
 
 interface IProps {
-  transform: SkiaValue<{ translateX: number }[]>;
+  transform?: SkiaValue<{ translateX: number }[]>; // todo remove optional
   children: React.ReactNode;
   backgroundColor: string;
-  tooltipWidth: SkiaValue;
+  tooltipWidth: number | SkiaValue;
   tooltipHeight?: number | SkiaValue;
 }
 
