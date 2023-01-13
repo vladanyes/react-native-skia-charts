@@ -4,8 +4,6 @@ import {
   Group,
   interpolate,
   Line,
-  SkFont,
-  SkiaMutableValue,
   Text,
   useComputedValue,
   useValue,
@@ -13,19 +11,9 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import dayjs from 'dayjs';
-import type { ChartPoint, TooltipProps } from './types';
+import type { LineChartTooltipProps } from './types';
 import { convertDataArrToObj } from './helpers';
 import Tooltip from './Tooltip';
-
-interface IProps extends TooltipProps {
-  x: SkiaMutableValue<number>;
-  xScaleBounds: readonly [number, number];
-  chartHeight: number;
-  font: SkFont | null;
-  data: ChartPoint[];
-  startDate: Date;
-  endDate: Date;
-}
 
 const LineChartTooltip = ({
   data,
@@ -33,15 +21,15 @@ const LineChartTooltip = ({
   xScaleBounds,
   chartHeight,
   font,
-  tooltipDateFormat = 'MMM D',
-  // setContent,
   backgroundColor = 'black',
   width = 100,
   height = 50,
+  dateFormat = 'MMM D',
   startDate,
   endDate,
-}: IProps) => {
-  const dataMap = convertDataArrToObj(data, tooltipDateFormat);
+}: // setContent,
+LineChartTooltipProps) => {
+  const dataMap = convertDataArrToObj(data, dateFormat);
   const tooltipContentDate = useValue<string>('');
   const tooltipContentValue = useValue<string>('');
 
@@ -56,9 +44,10 @@ const LineChartTooltip = ({
     ]);
   }, [x, startDate, endDate]);
 
+  // todo find a better way to calc contentDate
   useValueEffect(tooltipInterpolatedXPosition, () => {
     const contentDate = dayjs(tooltipInterpolatedXPosition.current).format(
-      tooltipDateFormat
+      dateFormat
     );
     const contentValue = dataMap[contentDate as keyof typeof dataMap];
 
@@ -79,11 +68,7 @@ const LineChartTooltip = ({
           <DashPathEffect intervals={[4, 4]} />
         </Line>
       </Group>
-      <Tooltip
-        backgroundColor={backgroundColor}
-        tooltipWidth={width}
-        tooltipHeight={height}
-      >
+      <Tooltip backgroundColor={backgroundColor} width={width} height={height}>
         {font ? (
           <Group color="white">
             <Text font={font} x={10} y={20} text={tooltipContentDate} />

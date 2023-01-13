@@ -1,8 +1,19 @@
 # react-native-skia-charts
 
-# This library is under development and is not ready for production use.
+**High-performance charts for react-native** 🚀
 
-High-performance charts for react-native
+### This library is under development and is not ready for production use. Yet.
+
+# Example
+
+<img src="./assets/line-chart-example.png" width="300" />
+
+Clone this repo and run the following command to run the example app:
+
+```js
+yarn run bootstrap:ios // for ios
+yarn run bootstrap:android // for android
+```
 
 ## Installation
 
@@ -11,11 +22,12 @@ npm install react-native-skia-charts
 ```
 
 ## Chart types
- - Line chart (draft state)
- - Stacked Bar chart (in progress)
- - Tooltip (in progress)
- - Multiple lines chart (todo)
- - Bar chart (todo)
+
+- Line chart (in progress)
+- Tooltip (in progress)
+- Stacked Bar chart (todo)
+- Multiple lines chart (todo)
+- Bar chart (todo)
 
 ## Contributing
 

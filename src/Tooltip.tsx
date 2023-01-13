@@ -1,30 +1,23 @@
 import React, { memo } from 'react';
-import { Group, RoundedRect, SkiaValue } from '@shopify/react-native-skia';
+import { Group, RoundedRect } from '@shopify/react-native-skia';
 import { CHART_TOOLTIP_HEIGHT } from './constants';
-
-interface IProps {
-  transform?: SkiaValue<{ translateX: number }[]>; // todo remove optional
-  children: React.ReactNode;
-  backgroundColor: string;
-  tooltipWidth: number | SkiaValue;
-  tooltipHeight?: number | SkiaValue;
-}
+import type { TooltipProps } from './types';
 
 const Tooltip = ({
   transform,
   children,
   backgroundColor,
-  tooltipWidth,
-  tooltipHeight = CHART_TOOLTIP_HEIGHT,
-}: IProps) => {
+  width = 100,
+  height = CHART_TOOLTIP_HEIGHT,
+}: TooltipProps) => {
   return (
     <Group transform={transform}>
       <RoundedRect
         r={10}
         x={0}
         y={0}
-        width={tooltipWidth}
-        height={tooltipHeight}
+        width={width}
+        height={height}
         color={backgroundColor}
       />
       {children}

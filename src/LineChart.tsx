@@ -26,28 +26,9 @@ import {
 import { getXLabel, getXLabelsInterval, getYLabels } from './helpers';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
-import type { ChartPoint, TooltipProps } from './types';
+import type { ChartPoint, LineChartProps } from './types';
 import { usePanGesture } from './hooks/usePanGesture';
 import LineChartTooltip from './LineChartTooltip';
-
-// todo move to types file
-interface IProps {
-  yAxisMax: number;
-  startDate: Date;
-  endDate: Date;
-  isLoading?: boolean;
-  labelsColor?: string;
-  fontPath?: string;
-  fontSize?: number;
-  canvasHeight?: number;
-  paddingHorizontal?: number;
-  paddingVertical?: number;
-  tension?: number;
-  onTouchStart: (arg: boolean) => void;
-  onTouchEnd: (arg: boolean) => void;
-  tooltip: TooltipProps;
-  data: ChartPoint[];
-}
 
 // fontMedium,
 export const LineChart = memo(
@@ -63,16 +44,10 @@ export const LineChart = memo(
     tension = 0.5,
     onTouchStart,
     onTouchEnd,
+    withTooltip = true,
     tooltip,
     data = [],
-  }: IProps) => {
-    const {
-      backgroundColor: tooltipBackgroundColor,
-      setContent: setTooltipContent,
-      width: tooltipWidth,
-      height: tooltipHeight,
-      dateFormat: tooltipDateFormat,
-    } = tooltip || {};
+  }: LineChartProps) => {
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
@@ -250,18 +225,14 @@ export const LineChart = memo(
               </Group>
             ) : null}
 
-            {isTouchActive ? (
+            {withTooltip && isTouchActive ? (
               <LineChartTooltip
+                {...tooltip}
                 data={data}
                 x={skiaX}
                 xScaleBounds={xScaleBounds}
                 chartHeight={chartHeight}
                 font={font}
-                setContent={setTooltipContent}
-                backgroundColor={tooltipBackgroundColor}
-                width={tooltipWidth}
-                height={tooltipHeight}
-                tooltipDateFormat={tooltipDateFormat}
                 startDate={startDate}
                 endDate={endDate}
               />

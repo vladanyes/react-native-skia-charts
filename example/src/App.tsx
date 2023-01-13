@@ -12,7 +12,7 @@ export default function App() {
   // todo remove dayjs dependency
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={[styles.container, { width: 250, maxHeight: 350 }]}>
+      <View style={[styles.container, { maxHeight: 350 }]}>
         <View style={styles.buttonWrapper}>
           <Button
             title="upd chart"
