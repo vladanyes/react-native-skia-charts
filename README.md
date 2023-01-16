@@ -1,6 +1,7 @@
 # react-native-skia-charts
 
-**High-performance charts for react-native** 🚀
+**High-performance charts for react-native** 🚀  
+[![npm version](https://img.shields.io/npm/v/react-native-skia-charts.svg?style=flat)](https://www.npmjs.com/package/react-native-skia-charts)
 
 ### This library is under development and is not ready for production use. Yet.
 
