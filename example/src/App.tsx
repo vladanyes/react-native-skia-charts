@@ -27,8 +27,11 @@ export default function App() {
           yAxisMax={20}
           paddingVertical={30}
           paddingHorizontal={30}
-          startDate={new Date()}
-          endDate={dayjs().add(20, 'days')}
+          // startDate={new Date()} // optional prop if not provided will be calculated from data
+          // endDate={dayjs().add(10, 'days')} // optional prop if not provided will be calculated from data
+          tooltip={{
+            width: 60,
+          }}
         />
       </View>
     </GestureHandlerRootView>

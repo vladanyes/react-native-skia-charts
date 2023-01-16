@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "description": "test",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

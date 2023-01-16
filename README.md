@@ -21,6 +21,14 @@ yarn run bootstrap:android // for android
 npm install react-native-skia-charts
 ```
 
+## Configuration props
+
+### `startDate`
+Optional prop. If not provided, `startDate` will be calculated from `data` prop.
+
+### `endDate`
+Optional prop. If not provided, `endDate` will be calculated from `data` prop.
+
 ## Chart types
 
 - Line chart (in progress)

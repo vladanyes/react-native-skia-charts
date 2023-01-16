@@ -3,6 +3,15 @@ import type { ChartPoint } from './types';
 // import omit from 'lodash/omit';
 // import { MIN_PLACEHOLDERS_COUNT } from './constants';
 
+export const getMinMaxDate = (data: ChartPoint[], type = 'min'): Date => {
+  const dateType = type === 'min' ? 'isBefore' : 'isAfter';
+  const minMaxPoint = data.reduce(
+    (a: ChartPoint, b: ChartPoint): ChartPoint =>
+      dayjs(a.date)[dateType](dayjs(b.date)) ? a : b
+  );
+  return minMaxPoint?.date;
+};
+
 export const getXLabelsInterval = (totalXGraphCount: number): number => {
   let xGraphInterval = 1;
   if (totalXGraphCount > 15) {

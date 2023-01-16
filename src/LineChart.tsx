@@ -23,7 +23,12 @@ import {
   CHART_VERTICAL_MARGIN,
   CHART_WIDTH,
 } from './constants';
-import { getXLabel, getXLabelsInterval, getYLabels } from './helpers';
+import {
+  getMinMaxDate,
+  getXLabel,
+  getXLabelsInterval,
+  getYLabels,
+} from './helpers';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
 import type { ChartPoint, LineChartProps } from './types';
@@ -36,8 +41,8 @@ export const LineChart = memo(
     yAxisMax = 1, // todo make dynamic
     labelsColor = 'black',
     isLoading = false,
-    startDate,
-    endDate,
+    startDate: startDateProp,
+    endDate: endDateProp,
     fontSize = CHART_FONT_SIZE,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
@@ -52,6 +57,10 @@ export const LineChart = memo(
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
     const skiaX = useValue(0);
+
+    // startEndDateProps or calculated from data
+    const startDate = startDateProp || getMinMaxDate(data, 'min');
+    const endDate = endDateProp || getMinMaxDate(data, 'max');
 
     const xScaleBounds = [
       paddingHorizontal,
@@ -118,7 +127,6 @@ export const LineChart = memo(
     const xLabelsInterval = getXLabelsInterval(totalCount);
 
     // scales
-    // todo get the latest date from the data
     const xScale = scaleLinear()
       .domain([dayjs(startDate).valueOf(), dayjs(endDate).valueOf()])
       .range(xScaleBounds);

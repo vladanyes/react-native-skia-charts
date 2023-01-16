@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import {
+  clamp,
   DashPathEffect,
   Group,
   interpolate,
@@ -14,6 +15,7 @@ import dayjs from 'dayjs';
 import type { LineChartTooltipProps } from './types';
 import { convertDataArrToObj } from './helpers';
 import Tooltip from './Tooltip';
+import { CHART_TOOLTIP_MARGIN } from './constants';
 
 const LineChartTooltip = ({
   data,
@@ -33,8 +35,19 @@ LineChartTooltipProps) => {
   const tooltipContentDate = useValue<string>('');
   const tooltipContentValue = useValue<string>('');
 
+  const transformLine = useComputedValue(() => {
+    return [{ translateX: clamp(x.current, xScaleBounds[0], xScaleBounds[1]) }];
+  }, [x]);
+
   const transformTooltip = useComputedValue(() => {
-    return [{ translateX: x.current }];
+    const xPos = clamp(x.current, xScaleBounds[0], xScaleBounds[1]);
+    const isLeftPos = xPos + width >= xScaleBounds[1];
+
+    const translateX = isLeftPos
+      ? xPos - width - CHART_TOOLTIP_MARGIN
+      : xPos + CHART_TOOLTIP_MARGIN;
+
+    return [{ translateX }];
   }, [x]);
 
   const tooltipInterpolatedXPosition = useComputedValue(() => {
@@ -57,7 +70,7 @@ LineChartTooltipProps) => {
 
   return (
     <Group>
-      <Group transform={transformTooltip}>
+      <Group transform={transformLine}>
         <Line
           p1={vec(0, 0)}
           p2={vec(0, chartHeight)}
@@ -68,14 +81,20 @@ LineChartTooltipProps) => {
           <DashPathEffect intervals={[4, 4]} />
         </Line>
       </Group>
-      <Tooltip backgroundColor={backgroundColor} width={width} height={height}>
-        {font ? (
-          <Group color="white">
-            <Text font={font} x={10} y={20} text={tooltipContentDate} />
-            <Text font={font} x={10} y={40} text={tooltipContentValue} />
-          </Group>
-        ) : null}
-      </Tooltip>
+      <Group transform={transformTooltip}>
+        <Tooltip
+          backgroundColor={backgroundColor}
+          width={width}
+          height={height}
+        >
+          {font ? (
+            <Group color="white">
+              <Text font={font} x={10} y={20} text={tooltipContentDate} />
+              <Text font={font} x={10} y={40} text={tooltipContentValue} />
+            </Group>
+          ) : null}
+        </Tooltip>
+      </Group>
     </Group>
   );
 };
