@@ -12,13 +12,13 @@
 Clone this repo and run the following command to run the example app:
 
 ```js
-yarn run bootstrap:ios // for ios
-yarn run bootstrap:android // for android
+npm run bootstrap:ios // for ios
+npm run bootstrap:android // for android
 ```
 
 ## Installation
 
-```sh
+<pre>
 npm install <a href="https://github.com/d3/d3-scale">d3-scale</a>
 npm install <a href="https://github.com/d3/d3-shape">d3-shape</a>
 npm install <a href="https://github.com/iamkun/dayjs">dayjs</a>
@@ -26,7 +26,7 @@ npm install <a href="https://github.com/software-mansion/react-native-reanimated
 npm install <a href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</a>
 npm install <a href="https://github.com/Shopify/react-native-skia">@shopify/react-native-skia</a>
 npm install react-native-skia-charts
-```
+</pre>
 
 ## Configuration props
 

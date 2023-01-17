@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "description": "test",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -18,8 +18,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
-    "example:ios": "cd example && yarn install && yarn run ios",
-    "example:android": "cd example && yarn install && yarn run android"
+    "example:ios": "cd example && npm i && npm run ios",
+    "example:android": "cd example && npm i && npm run android"
   },
   "keywords": [
     "react-native",
