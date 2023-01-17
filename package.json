@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "description": "test",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -22,9 +22,24 @@
     "example:android": "cd example && npm i && npm run android"
   },
   "keywords": [
+    "react",
     "react-native",
+    "react-native-skia",
+    "d3",
+    "skia",
     "ios",
-    "android"
+    "android",
+    "tooltip",
+    "svg",
+    "chart",
+    "charts",
+    "graph",
+    "graphs",
+    "linegraph",
+    "linechart",
+    "library",
+    "visualization",
+    "performance"
   ],
   "repository": "https://github.com/vladanyes/react-native-skia-charts",
   "author": "Vlad R <ryabinin.dev@gmail.com> (https://github.com/vladanyes)",
