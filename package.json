@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "test",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -69,7 +69,10 @@
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": ">=2",
-    "react-native-reanimated": ">=2"
+    "react-native-reanimated": ">=2",
+    "dayjs": ">=1",
+    "d3-scale": ">=2",
+    "d3-shape": ">=2"
   },
   "commitlint": {
     "extends": [

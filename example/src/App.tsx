@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
-import { SkiaLineChart, ChartPoint } from 'react-native-skia-charts';
+import { LineChart, ChartPoint } from 'react-native-skia-charts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import dayjs from 'dayjs';
 import { generateRandomChartData } from './helpers';
 
 export default function App() {
   const [points, setPoints] = React.useState<ChartPoint[]>(
     generateRandomChartData(20)
   );
-  // todo remove dayjs dependency
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={[styles.container, { maxHeight: 350 }]}>

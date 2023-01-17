@@ -19,6 +19,12 @@ yarn run bootstrap:android // for android
 ## Installation
 
 ```sh
+npm install <a href="https://github.com/d3/d3-scale">d3-scale</a>
+npm install <a href="https://github.com/d3/d3-shape">d3-shape</a>
+npm install <a href="https://github.com/iamkun/dayjs">dayjs</a>
+npm install <a href="https://github.com/software-mansion/react-native-reanimated">react-native-reanimated</a>
+npm install <a href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</a>
+npm install <a href="https://github.com/Shopify/react-native-skia">@shopify/react-native-skia</a>
 npm install react-native-skia-charts
 ```
 
@@ -37,6 +43,7 @@ Optional prop. If not provided, `endDate` will be calculated from `data` prop.
 - Stacked Bar chart (todo)
 - Multiple lines chart (todo)
 - Bar chart (todo)
+- Donut chart (todo)
 
 ## Contributing
 
