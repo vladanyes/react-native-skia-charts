@@ -17,6 +17,7 @@ module.exports = function (api) {
           },
         },
       ],
+      '@babel/plugin-transform-runtime',
       'react-native-reanimated/plugin',
     ],
   };
