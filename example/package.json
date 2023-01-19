@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
+    "@babel/runtime": "^7.17.8",
     "babel-plugin-module-resolver": "4.1.0"
   },
   "private": true
