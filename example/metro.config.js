@@ -34,6 +34,7 @@ module.exports = {
       transform: {
         experimentalImportSupport: false,
         inlineRequires: true,
+        resetCache: true,
       },
     }),
   },
