@@ -1,6 +1,15 @@
 {
   "extends": "../tsconfig",
   "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
-  }
+//    "paths": {
+//      "react-native-skia-charts": ["../src/index"]
+//    },
+  },
+  "include": [
+    "src",
+    "index.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

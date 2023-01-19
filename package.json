@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "High-performance charts for react-native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -9,7 +9,7 @@
   "source": "src/index",
   "files": [
     "src",
-    "lib",
+    "lib/**/*",
     "README.md"
   ],
   "scripts": {
@@ -76,7 +76,7 @@
     "react-native-builder-bob": "^0.18.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-reanimated": "~2.9.1",
-    "release-it": "^14.2.2",
+    "release-it": "15.4.1",
     "typescript": "^4.4.3"
   },
   "peerDependencies": {
