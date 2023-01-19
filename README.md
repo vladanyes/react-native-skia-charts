@@ -9,11 +9,15 @@
 
 <img src="./assets/line-chart-example.png" width="300" />
 
-Clone this repo and run the following command to run the example app:
+Clone the repo and run one of the following commands to run the example app:
 
 ```js
-npm run example:ios // for ios
-npm run example:android // for android
+npm run example:ios
+```
+or
+
+```js
+npm run example:android
 ```
 
 ## Installation
