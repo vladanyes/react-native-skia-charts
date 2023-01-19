@@ -42,8 +42,8 @@ Optional prop. If not provided, `endDate` will be calculated from `data` prop.
 
 ## Chart types
 
-- Line chart (in progress)
-- Tooltip (in progress)
+- Line chart (draft state)
+- Tooltip (draft state)
 - Stacked Bar chart (todo)
 - Multiple lines chart (todo)
 - Bar chart (todo)
