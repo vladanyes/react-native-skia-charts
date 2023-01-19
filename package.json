@@ -18,8 +18,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
-    "example:ios": "cd example && npm i && npm run ios --clearCache",
-    "example:android": "cd example && npm i && npm run android --clearCache"
+    "example:ios": "cd example && npm i && npm run ios",
+    "example:android": "cd example && npm i && npm run android"
   },
   "keywords": [
     "react",
