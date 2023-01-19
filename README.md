@@ -7,7 +7,7 @@
 
 # Example
 
-<img src="./assets/line-chart-example.png" width="300" />
+<img src="src/assets/line-chart-example.png" width="300" />
 
 Clone the repo and run one of the following commands to run the example app:
 

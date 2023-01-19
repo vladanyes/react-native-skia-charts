@@ -80,7 +80,7 @@ export const LineChart = memo(
       xScaleBounds,
     });
     const font = useFont(
-      require('../assets/fonts/Roboto-Regular.ttf'),
+      require('./assets/fonts/Roboto-Regular.ttf'),
       fontSize
     );
 
