@@ -12,8 +12,8 @@
 Clone this repo and run the following command to run the example app:
 
 ```js
-npm run bootstrap:ios // for ios
-npm run bootstrap:android // for android
+npm run example:ios // for ios
+npm run example:android // for android
 ```
 
 ## Installation
