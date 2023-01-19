@@ -22,8 +22,8 @@
     "react": "~18.1.0",
     "react-native": "~0.70.5",
     "react-native-gesture-handler": "~2.5.0",
-    "react-native-reanimated": "~2.9.1",
-    "react-native-skia-charts": "^0.0.46",
+    "react-native-reanimated": "2.9.0",
+    "react-native-skia-charts": "^0.0.50",
     "typescript": "4.6.3"
   },
   "devDependencies": {
