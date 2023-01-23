@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Easing, LayoutChangeEvent, View } from 'react-native';
+import { LayoutChangeEvent, View } from 'react-native';
 import {
   Canvas,
   DashPathEffect,
@@ -24,13 +24,14 @@ import {
   CHART_WIDTH,
 } from './constants';
 import {
+  getMaxYValue,
   getMinMaxDate,
   getXLabel,
   getXLabelsInterval,
   getYLabels,
 } from './helpers';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
+import { runOnJS, useAnimatedReaction, Easing } from 'react-native-reanimated';
 import type { ChartPoint, LineChartProps } from './types';
 import { usePanGesture } from './hooks/usePanGesture';
 import LineChartTooltip from './LineChartTooltip';
@@ -38,7 +39,7 @@ import LineChartTooltip from './LineChartTooltip';
 // fontMedium,
 export const LineChart = memo(
   ({
-    yAxisMax = 1, // todo make dynamic
+    yAxisMax: yAxisMaxProp = 1,
     labelsColor = 'black',
     isLoading = false,
     startDate: startDateProp,
@@ -58,9 +59,10 @@ export const LineChart = memo(
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
     const skiaX = useValue(0);
 
-    // startEndDateProps or calculated from data
+    // define chart boundaries
     const startDate = startDateProp || getMinMaxDate(data, 'min');
     const endDate = endDateProp || getMinMaxDate(data, 'max');
+    const yAxisMax = yAxisMaxProp || getMaxYValue(data);
 
     const xScaleBounds = [
       paddingHorizontal,

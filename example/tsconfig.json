@@ -1,9 +1,9 @@
 {
   "extends": "../tsconfig",
   "compilerOptions": {
-//    "paths": {
-//      "react-native-skia-charts": ["../src/index"]
-//    },
+    "paths": {
+      "react-native-skia-charts": ["../src/index"]
+    },
   },
   "include": [
     "src",

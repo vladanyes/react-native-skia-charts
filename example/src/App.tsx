@@ -19,18 +19,18 @@ export default function App() {
           />
         </View>
         <LineChart
-          onTouchStart={() => {}}
-          onTouchEnd={() => {}}
-          fontSize={12}
+          // onTouchStart={() => {}}
+          // onTouchEnd={() => {}}
+          // fontSize={12}
           data={points}
-          yAxisMax={20}
-          paddingVertical={30}
-          paddingHorizontal={30}
+          // yAxisMax={20}
+          // paddingVertical={30}
+          // paddingHorizontal={30}
           // startDate={new Date()} // optional prop if not provided will be calculated from data
           // endDate={dayjs().add(10, 'days')} // optional prop if not provided will be calculated from data
-          tooltip={{
-            width: 60,
-          }}
+          // tooltip={{
+          //   width: 60,
+          // }}
         />
       </View>
     </GestureHandlerRootView>

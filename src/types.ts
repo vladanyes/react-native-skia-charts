@@ -11,9 +11,9 @@ export interface ChartPoint {
 }
 
 export interface LineChartProps {
-  yAxisMax: number;
-  startDate: Date;
-  endDate: Date;
+  yAxisMax?: number;
+  startDate?: Date;
+  endDate?: Date;
   isLoading?: boolean;
   labelsColor?: string;
   fontPath?: string;
@@ -22,10 +22,10 @@ export interface LineChartProps {
   paddingHorizontal?: number;
   paddingVertical?: number;
   tension?: number;
-  onTouchStart: (arg: boolean) => void;
-  onTouchEnd: (arg: boolean) => void;
-  withTooltip: boolean;
-  tooltip: TooltipProps;
+  onTouchStart?: (arg: boolean) => void;
+  onTouchEnd?: (arg: boolean) => void;
+  withTooltip?: boolean;
+  tooltip?: TooltipProps;
   data: ChartPoint[];
 }
 
