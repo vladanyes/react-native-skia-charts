@@ -12,12 +12,16 @@ export const getMinMaxDate = (data: ChartPoint[], type = 'min'): Date => {
   return minMaxPoint?.date;
 };
 
-export const getMaxYValue = (data: ChartPoint[]): number => {
+export const getMaxYValue = (data: ChartPoint[] = []): number => {
   const maxPoint = data.reduce(
     (acc: ChartPoint, b: ChartPoint): ChartPoint =>
       acc.value > b.value ? acc : b
   );
-  return maxPoint?.value;
+  const [item1, item2] = data;
+  // @ts-ignore
+  const diff = item1?.value - item2?.value;
+
+  return maxPoint?.value + (diff || 1);
 };
 
 export const getXLabelsInterval = (totalXGraphCount: number): number => {
