@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "description": "High-performance charts for react-native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

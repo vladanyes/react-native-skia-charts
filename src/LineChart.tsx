@@ -39,7 +39,7 @@ import LineChartTooltip from './LineChartTooltip';
 // fontMedium,
 export const LineChart = memo(
   ({
-    yAxisMax: yAxisMaxProp = 1,
+    yAxisMax: yAxisMaxProp,
     labelsColor = 'black',
     isLoading = false,
     startDate: startDateProp,
