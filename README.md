@@ -7,7 +7,7 @@
 
 # Example
 
-<img src="src/assets/line-chart-example.png" width="300" />
+<img src="img/line-chart.gif" width="300" />
 
 Clone the repo and run one of the following commands to run the example app:
 
@@ -40,13 +40,17 @@ import { LineChart, ChartPoint } from 'react-native-skia-charts';
 // ...
 <LineChart
   data={[{ date: '2021-01-01', value: 1 }, { date: '2021-01-02', value: 2 }, ... ]}
+  fontFile={require("../assets/fonts/Roboto-Regular.ttf")}
 />
 ```
 
 ## Configuration props
 
-### `data`
+### `data` (required)
 The data to be displayed in the chart. The data should be an array of objects with a `date` and `value` properties.
+
+### `fontFile` (required)
+A font file to be used in the chart. Example: `require("../assets/fonts/Roboto-Regular.ttf")`
 
 ### `startDate`
 
@@ -60,6 +64,8 @@ If not provided, `endDate` will be calculated from `data` prop.
 ### `onTouchEnd`
 ### `fontSize`
 ### `yAxisMax`
+### `tension`
+### `labelsColor`
 ### `paddingVertical`
 ### `paddingHorizontal`
 ### `tooltip`

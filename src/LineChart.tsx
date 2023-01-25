@@ -45,6 +45,7 @@ export const LineChart = memo(
     startDate: startDateProp,
     endDate: endDateProp,
     fontSize = CHART_FONT_SIZE,
+    fontFile,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
     tension = 0.5,
@@ -81,10 +82,7 @@ export const LineChart = memo(
     } = usePanGesture({
       xScaleBounds,
     });
-    const font = useFont(
-      require('./assets/fonts/Roboto-Regular.ttf'),
-      fontSize
-    );
+    const font = useFont(fontFile, fontSize);
 
     const yLabels = getYLabels(yAxisMax);
 

@@ -19,10 +19,11 @@ export default function App() {
           />
         </View>
         <LineChart
+          fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
+          data={points}
           // onTouchStart={() => {}}
           // onTouchEnd={() => {}}
           // fontSize={12}
-          data={points}
           // yAxisMax={20}
           // paddingVertical={30}
           // paddingHorizontal={30}

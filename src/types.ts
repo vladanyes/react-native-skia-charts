@@ -16,7 +16,7 @@ export interface LineChartProps {
   endDate?: Date;
   isLoading?: boolean;
   labelsColor?: string;
-  fontPath?: string;
+  fontFile: SkFont;
   fontSize?: number;
   canvasHeight?: number;
   paddingHorizontal?: number;
