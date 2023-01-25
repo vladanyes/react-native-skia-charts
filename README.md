@@ -45,13 +45,24 @@ import { LineChart, ChartPoint } from 'react-native-skia-charts';
 
 ## Configuration props
 
+### `data`
+The data to be displayed in the chart. The data should be an array of objects with a `date` and `value` properties.
+
 ### `startDate`
 
-Optional prop. If not provided, `startDate` will be calculated from `data` prop.
+If not provided, `startDate` will be calculated from `data` prop.
 
 ### `endDate`
 
-Optional prop. If not provided, `endDate` will be calculated from `data` prop.
+If not provided, `endDate` will be calculated from `data` prop.
+
+### `onTouchStart`
+### `onTouchEnd`
+### `fontSize`
+### `yAxisMax`
+### `paddingVertical`
+### `paddingHorizontal`
+### `tooltip`
 
 ## Chart types
 
