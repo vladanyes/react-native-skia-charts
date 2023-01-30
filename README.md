@@ -7,8 +7,10 @@
 
 # Example
 
-<img src="img/line-chart.gif" width="300" />
-<img src="img/bar-chart.gif" width="300" />
+<div>
+  <img src="img/line-chart.gif" width="300" />
+  <img src="img/bar-chart.gif" width="300" />
+</div>
 
 Clone the repo and run one of the following commands to run the example app:
 
@@ -48,9 +50,11 @@ import { LineChart, ChartPoint } from 'react-native-skia-charts';
 ## Configuration props
 
 ### `data` (required)
+
 The data to be displayed in the chart. The data should be an array of objects with a `date` and `value` properties.
 
 ### `fontFile` (required)
+
 A font file to be used in the chart. Example: `require("../assets/fonts/Roboto-Regular.ttf")`
 
 ### `startDate`
@@ -62,14 +66,23 @@ If not provided, `startDate` will be calculated from `data` prop.
 If not provided, `endDate` will be calculated from `data` prop.
 
 ### `onTouchStart`
+
 ### `onTouchEnd`
+
 ### `fontSize`
+
 ### `chartColor`
+
 ### `yAxisMax`
+
 ### `tension`
+
 ### `labelsColor`
+
 ### `paddingVertical`
+
 ### `paddingHorizontal`
+
 ### `tooltip`
 
 ## Chart types
