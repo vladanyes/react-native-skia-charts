@@ -8,6 +8,7 @@
 # Example
 
 <img src="img/line-chart.gif" width="300" />
+<img src="img/bar-chart.gif" width="300" />
 
 Clone the repo and run one of the following commands to run the example app:
 
@@ -75,9 +76,9 @@ If not provided, `endDate` will be calculated from `data` prop.
 
 - Line chart (draft state)
 - Tooltip (draft state)
+- Bar chart (draft state)
 - Stacked Bar chart (todo)
 - Multiple lines chart (todo)
-- Bar chart (todo)
 - Donut chart (todo)
 
 ## Contributing
