@@ -39,9 +39,10 @@ import LineChartTooltip from './LineChartTooltip';
 // fontMedium,
 export const LineChart = memo(
   ({
+    chartColor = CHART_LINE_COLOR,
     yAxisMax: yAxisMaxProp,
     labelsColor = 'black',
-    isLoading = false,
+    isLoading,
     startDate: startDateProp,
     endDate: endDateProp,
     fontSize = CHART_FONT_SIZE,
@@ -177,7 +178,7 @@ export const LineChart = memo(
                 strokeWidth={3}
                 strokeJoin="round"
                 strokeCap="round"
-                color={CHART_LINE_COLOR}
+                color={chartColor}
                 start={0}
                 end={lineAnimationState}
               />

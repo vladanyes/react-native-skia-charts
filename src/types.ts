@@ -10,15 +10,30 @@ export interface ChartPoint {
   date: Date;
 }
 
+export interface BarChartProps {
+  chartColor?: string;
+  fontFile: SkFont;
+  fontSize?: number;
+  labelsColor?: string;
+  tooltip?: TooltipProps;
+  data: ChartPoint[];
+  barWidth?: number;
+  startDate?: Date;
+  endDate?: Date;
+  isLoading?: boolean;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
+}
+
 export interface LineChartProps {
   yAxisMax?: number;
+  chartColor?: string;
   startDate?: Date;
   endDate?: Date;
   isLoading?: boolean;
   labelsColor?: string;
   fontFile: SkFont;
   fontSize?: number;
-  canvasHeight?: number;
   paddingHorizontal?: number;
   paddingVertical?: number;
   tension?: number;

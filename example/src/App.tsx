@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
-import { LineChart, ChartPoint } from 'react-native-skia-charts';
+import { LineChart, ChartPoint, BarChart } from 'react-native-skia-charts';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { generateRandomChartData } from './helpers';
 
@@ -11,16 +11,22 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={[styles.container, { maxHeight: 350 }]}>
+      <View style={[styles.container, { maxHeight: 600 }]}>
         <View style={styles.buttonWrapper}>
           <Button
             title="upd chart"
             onPress={() => setPoints(generateRandomChartData(30))}
           />
         </View>
+        <BarChart
+          data={points}
+          fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
+        />
+        <View style={{ height: 30, width: '100%' }}></View>
         <LineChart
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
           data={points}
+          // chartColor="red"
           // onTouchStart={() => {}}
           // onTouchEnd={() => {}}
           // fontSize={12}

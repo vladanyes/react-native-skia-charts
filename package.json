@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-charts",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "description": "High-performance charts for react-native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -81,13 +81,13 @@
   },
   "peerDependencies": {
     "@shopify/react-native-skia": "*",
+    "d3-scale": ">=2",
+    "d3-shape": ">=2",
+    "dayjs": ">=1",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": ">=2",
-    "react-native-reanimated": ">=2",
-    "dayjs": ">=1",
-    "d3-scale": ">=2",
-    "d3-shape": ">=2"
+    "react-native-reanimated": ">=2"
   },
   "commitlint": {
     "extends": [

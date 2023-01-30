@@ -88,6 +88,38 @@ export const getXLabel = ({
   }
 };
 
+// this function is taken from d3-array
+// https://github.com/d3/d3-array/blob/main/src/max.js
+export default function d3Max(
+  values: ChartPoint[],
+  valueof: ((arg0: any, arg1: number, arg2: any) => any) | undefined
+) {
+  let max;
+  if (valueof === undefined) {
+    for (const value of values) {
+      if (
+        value != null &&
+        // @ts-ignore todo: fix types
+        (max < value || (max === undefined && value >= value))
+      ) {
+        max = value;
+      }
+    }
+  } else {
+    let index = -1;
+    for (let value of values) {
+      if (
+        (value = valueof(value, ++index, values)) != null &&
+        // @ts-ignore todo: fix types
+        (max < value || (max === undefined && value >= value))
+      ) {
+        max = value;
+      }
+    }
+  }
+  return max;
+}
+
 // // sample of PoolLineDailyUsageFormatted:
 // //   {"date": "2022-09-16", "18931943440": 0.08, "3576721372": 0.1}
 // export type PoolLineDailyUsageFormatted = {

@@ -63,6 +63,7 @@ If not provided, `endDate` will be calculated from `data` prop.
 ### `onTouchStart`
 ### `onTouchEnd`
 ### `fontSize`
+### `chartColor`
 ### `yAxisMax`
 ### `tension`
 ### `labelsColor`
