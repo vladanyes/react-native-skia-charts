@@ -11,6 +11,7 @@
   <img src="img/line-chart.gif" width="300" />
   <img src="img/bar-chart.gif" width="300" />
 </div>
+<img src="img/stacked-bar-chart.gif" width="300" />
 
 Clone the repo and run one of the following commands to run the example app:
 
@@ -29,6 +30,7 @@ npm run example:android
 <pre>
 npm install <a href="https://github.com/d3/d3-scale">d3-scale</a>
 npm install <a href="https://github.com/d3/d3-shape">d3-shape</a>
+npm install <a href="https://github.com/d3/d3-array">d3-array</a>
 npm install <a href="https://github.com/iamkun/dayjs">dayjs</a>
 npm install <a href="https://github.com/software-mansion/react-native-reanimated">react-native-reanimated</a>
 npm install <a href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</a>
@@ -90,7 +92,7 @@ If not provided, `endDate` will be calculated from `data` prop.
 - Line chart (draft state)
 - Tooltip (draft state)
 - Bar chart (draft state)
-- Stacked Bar chart (todo)
+- Stacked Bar chart (draft state)
 - Multiple lines chart (todo)
 - Donut chart (todo)
 
