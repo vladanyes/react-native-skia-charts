@@ -130,7 +130,7 @@ export const BarChart = memo(
       <View style={{ flex: 1 }} onLayout={onLayout}>
         <Canvas style={canvasStyles}>
           <Path path={path} color={chartColor} />
-          {data.map((dataPoint: ChartPoint, idx) => (
+          {data.map((dataPoint: ChartPoint, idx: number) => (
             <Group color={labelsColor} key={`${dataPoint.date}-xAxis-bar`}>
               <Text
                 key={dataPoint.date.toString()}

@@ -1,5 +1,11 @@
 import dayjs from 'dayjs';
-import type { ChartPoint } from './types';
+import type {
+  ChartPoint,
+  CombinedDataType,
+  Dataset,
+  FlattenDataType,
+  GroupedDataType,
+} from './types';
 import { groups } from 'd3-array';
 // import omit from 'lodash/omit';
 // import { MIN_PLACEHOLDERS_COUNT } from './constants';
@@ -163,82 +169,25 @@ export default function d3Max(
 // // };
 
 // todo: fix types
-export const getDataToStack = (
-  datasets
-): Array<{
-  date: Date;
-  [key: string]: number | Date;
-}> => {
+export const getDataToStack = (datasets: Dataset[]): CombinedDataType[] => {
   const flattenData = datasets.flatMap((dataset) => {
     return dataset.data.map((dataPoint) => {
       return {
         date: new Date(dataPoint.date),
-        [dataset.label]: dataPoint.value,
+        [dataset.label]: Number(dataPoint.value),
       };
     });
   });
-  // {
-  //   "date": "2020-01-01T00:00:00.000Z",
-  //   "First item label": 10
-  // },
-  // {
-  //   "date": "2020-01-02T00:00:00.000Z",
-  //   "Second item label": 20
-  // },
-  // {
-  //   "date": "2020-01-03T00:00:00.000Z",
-  //   "Second item label": 30
-  // },
 
-  const groupedData = groups(flattenData, (d) => d.date);
-  // const tType = [
-  //   [
-  //     '2020-01-01T00:00:00.000Z',
-  //     [
-  //       {
-  //         'date': '2020-01-01T00:00:00.000Z',
-  //         'First line': 10,
-  //       },
-  //       {
-  //         'date': '2020-01-01T00:00:00.000Z',
-  //         'Third line': 10,
-  //       },
-  //     ],
-  //   ],
-  //   [
-  //     '2020-01-02T00:00:00.000Z',
-  //     [
-  //       {
-  //         'date': '2020-01-02T00:00:00.000Z',
-  //         'Second line': 20,
-  //       },
-  //       {
-  //         'date': '2020-01-02T00:00:00.000Z',
-  //         'Third line': 30,
-  //       },
-  //     ],
-  //   ],
-  // ];
+  const groupedData: GroupedDataType[] = groups(
+    flattenData,
+    (d: FlattenDataType) => d.date
+  );
 
-  const combinedData = groupedData.map(([date, data]) => {
+  const combinedData: CombinedDataType[] = groupedData.map(([_, data]) => {
     return Object.assign({}, ...data);
   });
-  // const t2Type = [
-  //   {
-  //     'date': '2020-01-01T00:00:00.000Z',
-  //     'First line': 10,
-  //     'Third line': 10,
-  //   },
-  //   {
-  //     'date': '2020-01-02T00:00:00.000Z',
-  //     'Second line': 20,
-  //     'Third line': 30,
-  //   },
-  //   {
-  //     'date': '2020-01-03T00:00:00.000Z',
-  //     'Second line': 30,
-  //   },
-  // ];
+
   const sortedData = combinedData.sort((a, b) => {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
   });

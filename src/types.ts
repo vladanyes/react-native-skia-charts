@@ -10,13 +10,23 @@ export interface ChartPoint {
   date: Date;
 }
 
+export interface Dataset {
+  // label is required as we use it as an object key in *getDataToStack*
+  label: string;
+  color?: string;
+  data: ChartPoint[];
+}
+
 export interface BarChartProps {
+  // todo: should be removed
   chartColor?: string;
   fontFile: SkFont;
   fontSize?: number;
   labelsColor?: string;
   tooltip?: TooltipProps;
+  // todo: should be removed
   data: ChartPoint[];
+  datasets?: Dataset[];
   barWidth?: number;
   startDate?: Date;
   endDate?: Date;
@@ -63,3 +73,50 @@ export interface LineChartTooltipProps extends Omit<TooltipProps, 'children'> {
   startDate: Date;
   endDate: Date;
 }
+
+export type FlattenDataType = {
+  date: Date;
+  [key: string]: number | Date;
+};
+// {
+//   "date": "2020-01-01T00:00:00.000Z",
+//   "First item label": 10
+// }
+
+export type GroupedDataType = [Date, FlattenDataType[]];
+// const GroupedDataType = [
+//   [
+//     '2020-01-01T00:00:00.000Z',
+//     [
+//       {
+//         'date': '2020-01-01T00:00:00.000Z',
+//         'First line': 10,
+//       },
+//       {
+//         'date': '2020-01-01T00:00:00.000Z',
+//         'Third line': 10,
+//       },
+//     ],
+//   ],
+//   [
+//     '2020-01-02T00:00:00.000Z',
+//     [
+//       {
+//         'date': '2020-01-02T00:00:00.000Z',
+//         'Second line': 20,
+//       },
+//       {
+//         'date': '2020-01-02T00:00:00.000Z',
+//         'Third line': 30,
+//       },
+//     ],
+//   ],
+// ];
+export type CombinedDataType = FlattenDataType;
+// const CombinedDataType = [
+//   {
+//     'date': '2020-01-01T00:00:00.000Z',
+//     'First line': 10,
+//     'Third line': 10,
+//   },
+// ]

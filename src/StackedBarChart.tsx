@@ -6,7 +6,7 @@ import {
   Path,
   runTiming,
   Skia,
-  Text,
+  // @ts-ignore
   Selector,
   useComputedValue,
   useValue,
@@ -15,17 +15,17 @@ import {
 import { Easing } from 'react-native-reanimated';
 import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { max } from 'd3-array';
-import type { BarChartProps, ChartPoint } from './types';
-import d3Max, {
+import type { BarChartProps } from './types';
+import {
   getDataToStack,
-  getMinMaxDate,
-  getXLabel,
-  getXLabelsInterval,
-  getYLabels,
+  // getMinMaxDate,
+  // getXLabel,
+  // getXLabelsInterval,
+  // getYLabels,
 } from './helpers';
 import {
-  CHART_BAR_COLOR,
-  CHART_BAR_WIDTH,
+  // CHART_BAR_COLOR,
+  // CHART_BAR_WIDTH,
   CHART_FONT_SIZE,
   CHART_HEIGHT,
   CHART_HORIZONTAL_MARGIN,
@@ -36,19 +36,18 @@ import { stack } from 'd3-shape';
 
 export const StackedBarChart = memo(
   ({
-    isLoading,
-    chartColor = CHART_BAR_COLOR,
+    // isLoading,
     fontFile,
     fontSize = CHART_FONT_SIZE,
-    labelsColor = 'black',
-    startDate: startDateProp,
+    // labelsColor = 'black',
+    // startDate: startDateProp,
     // endDate: endDateProp,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
-    barWidth = CHART_BAR_WIDTH,
+    // barWidth = CHART_BAR_WIDTH,
     datasets = [],
   }: BarChartProps) => {
-    console.log('datasets', datasets);
+    // console.log('datasets', datasets);
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const barsAnimationState = useValue<number>(0);
@@ -59,6 +58,7 @@ export const StackedBarChart = memo(
     const dataToStack = getDataToStack(datasets);
     const stackGenerator = stack().keys(stackKeys);
 
+    // @ts-ignore
     const stackedData = stackGenerator(dataToStack);
     // stackedData --> [[[0, 10], [0, 10]], [[10, 30], [10, 30]]]
 
@@ -86,16 +86,17 @@ export const StackedBarChart = memo(
 
     const xDomain = dataToStack.map((data) => data.date);
     const xScale = scaleBand()
+      // @ts-ignore
       .domain(xDomain)
       .range(xScaleBounds)
       .paddingInner(0.5)
       .align(0);
 
+    // @ts-ignore
     const yScale = scaleLinear().domain(yDomain).range(yScaleBounds);
 
-    const [_, yAxisMax] = yDomain;
+    // const [_, yAxisMax] = yDomain;
     // const yLabels = getYLabels(yAxisMax);
-
 
     // stacked bars path
     const pathsArr = useComputedValue(() => {
@@ -107,12 +108,16 @@ export const StackedBarChart = memo(
           layer.forEach((subLayer: number[], subIdx: number) => {
             // subLayer => [0, 150]
             const currentData = dataToStack[subIdx];
+            // @ts-ignore
             color = colorScale(layer.key) as string;
+            // console.log('xScale(currentData.date)', xScale(currentData.date));
 
             const rect = Skia.XYWHRect(
+              // @ts-ignore
               xScale(currentData.date),
               chartHeight,
               xScale.bandwidth(),
+              // @ts-ignore
               yScale(subLayer[1] * barsAnimationState.current) * -1
             );
 
@@ -156,9 +161,11 @@ export const StackedBarChart = memo(
             {stackedData.map((_, i) => (
               <Path
                 key={i}
+                // @ts-ignore
                 path={Selector(pathsArr, (v) => v[i]?.path)}
                 style="fill"
                 strokeWidth={3}
+                // @ts-ignore
                 color={Selector(pathsArr, (v) => v[i]?.color)}
               />
             ))}
