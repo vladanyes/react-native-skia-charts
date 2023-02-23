@@ -6,33 +6,32 @@ import {
   Path,
   runTiming,
   Skia,
-  // @ts-ignore
   Selector,
   useComputedValue,
   useValue,
   Group,
+  SkPath,
 } from '@shopify/react-native-skia';
 import { Easing } from 'react-native-reanimated';
 import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { max } from 'd3-array';
+import { stack } from 'd3-shape';
 import type { BarChartProps } from './types';
 import {
   getDataToStack,
   // getMinMaxDate,
   // getXLabel,
-  // getXLabelsInterval,
+  getXLabelsInterval,
   // getYLabels,
 } from './helpers';
 import {
-  // CHART_BAR_COLOR,
-  // CHART_BAR_WIDTH,
+  CHART_BAR_WIDTH,
   CHART_FONT_SIZE,
   CHART_HEIGHT,
   CHART_HORIZONTAL_MARGIN,
   CHART_VERTICAL_MARGIN,
   CHART_WIDTH,
 } from './constants';
-import { stack } from 'd3-shape';
 
 export const StackedBarChart = memo(
   ({
@@ -44,10 +43,9 @@ export const StackedBarChart = memo(
     // endDate: endDateProp,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
-    // barWidth = CHART_BAR_WIDTH,
+    barWidth: barWidthProp = CHART_BAR_WIDTH,
     datasets = [],
   }: BarChartProps) => {
-    // console.log('datasets', datasets);
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const barsAnimationState = useValue<number>(0);
@@ -64,8 +62,8 @@ export const StackedBarChart = memo(
 
     const colorScale = scaleOrdinal().domain(stackKeys).range(stackColors);
 
-    // const totalCount = datasets.length;
-    // const xLabelsInterval = getXLabelsInterval(totalCount);
+    const totalCount = datasets.length;
+    const xLabelsInterval = getXLabelsInterval(totalCount);
 
     const chartHeight = canvasHeight - paddingVertical;
     const yScaleBounds = [paddingVertical, chartHeight] as const;
@@ -89,8 +87,10 @@ export const StackedBarChart = memo(
       // @ts-ignore
       .domain(xDomain)
       .range(xScaleBounds)
-      .paddingInner(0.5)
+      .paddingInner(xLabelsInterval === 1 ? -1 : 0.5)
       .align(0);
+    // take a smaller bar width in order to avoid wide bars when total count is small.
+    const barWidth = Math.min(barWidthProp, xScale.bandwidth());
 
     // @ts-ignore
     const yScale = scaleLinear().domain(yDomain).range(yScaleBounds);
@@ -116,7 +116,7 @@ export const StackedBarChart = memo(
               // @ts-ignore
               xScale(currentData.date),
               chartHeight,
-              xScale.bandwidth(),
+              barWidth,
               // @ts-ignore
               yScale(subLayer[1] * barsAnimationState.current) * -1
             );
@@ -133,7 +133,7 @@ export const StackedBarChart = memo(
     const animateBars = (from: number = 0, to: number = 1) => {
       barsAnimationState.current = from;
       runTiming(barsAnimationState, to, {
-        duration: 600,
+        duration: 1000,
         easing: Easing.inOut(Easing.exp),
       });
     };
@@ -161,11 +161,9 @@ export const StackedBarChart = memo(
             {stackedData.map((_, i) => (
               <Path
                 key={i}
-                // @ts-ignore
-                path={Selector(pathsArr, (v) => v[i]?.path)}
+                path={Selector(pathsArr, (v) => v[i]?.path as SkPath)}
                 style="fill"
                 strokeWidth={3}
-                // @ts-ignore
                 color={Selector(pathsArr, (v) => v[i]?.color)}
               />
             ))}

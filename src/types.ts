@@ -1,6 +1,7 @@
 import type React from 'react';
 import type {
   SkFont,
+  DataSourceParam,
   SkiaMutableValue,
   SkiaValue,
 } from '@shopify/react-native-skia';
@@ -20,7 +21,7 @@ export interface Dataset {
 export interface BarChartProps {
   // todo: should be removed
   chartColor?: string;
-  fontFile: SkFont;
+  fontFile: DataSourceParam;
   fontSize?: number;
   labelsColor?: string;
   tooltip?: TooltipProps;
@@ -42,7 +43,7 @@ export interface LineChartProps {
   endDate?: Date;
   isLoading?: boolean;
   labelsColor?: string;
-  fontFile: SkFont;
+  fontFile: DataSourceParam;
   fontSize?: number;
   paddingHorizontal?: number;
   paddingVertical?: number;

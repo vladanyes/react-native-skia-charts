@@ -28,7 +28,7 @@ export default function App() {
           />
         </View>
         <StackedBarChart
-          datasets={generateRandomStackedChartData(6)}
+          datasets={generateRandomStackedChartData(14)}
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
         />
         <View style={{ height: 10, width: '100%' }}></View>

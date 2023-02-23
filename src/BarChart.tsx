@@ -68,7 +68,7 @@ export const BarChart = memo(
     const xScale = scalePoint()
       .domain(xScaleDomain)
       .range(xScaleBounds)
-      .padding(xLabelsInterval === 1 ? 1 : 0.5);
+      .padding(xLabelsInterval === 1 ? -1 : 0.5);
 
     const yScaleDomain = [
       0,

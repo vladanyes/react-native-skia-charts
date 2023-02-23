@@ -34,6 +34,6 @@ export function generateRandomChartData(length: number): ChartPoint[] {
       date: addDays(index),
       // | bitwise-OR operator
       // eslint-disable-next-line no-bitwise
-      value: (Math.random() * index) | 0,
+      value: (Math.random() * index) | 1,
     }));
 }

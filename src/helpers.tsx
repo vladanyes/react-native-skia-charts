@@ -7,7 +7,6 @@ import type {
   GroupedDataType,
 } from './types';
 import { groups } from 'd3-array';
-// import omit from 'lodash/omit';
 // import { MIN_PLACEHOLDERS_COUNT } from './constants';
 
 export const getMinMaxDate = (data: ChartPoint[], type = 'min'): Date => {
@@ -33,7 +32,7 @@ export const getMaxYValue = (data: ChartPoint[] = []): number => {
 
 export const getXLabelsInterval = (totalXGraphCount: number): number => {
   let xGraphInterval = 1;
-  if (totalXGraphCount > 15) {
+  if (totalXGraphCount >= 14) {
     xGraphInterval = 2;
   }
   return xGraphInterval;
