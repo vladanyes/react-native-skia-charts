@@ -39,7 +39,6 @@ import LineChartTooltip from './LineChartTooltip';
 // fontMedium,
 export const LineChart = memo(
   ({
-    chartColor = CHART_LINE_COLOR,
     yAxisMax: yAxisMaxProp,
     labelsColor = 'black',
     isLoading,
@@ -54,8 +53,10 @@ export const LineChart = memo(
     onTouchEnd,
     withTooltip = true,
     tooltip,
-    data = [],
+    datasets = [],
   }: LineChartProps) => {
+    // only the first item of datasets prop will be used, other items will be ignored.
+    const [{ data = [], color: chartColor = CHART_LINE_COLOR } = {}] = datasets;
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const [isTouchActive, setIsTouchActive] = useState<boolean>(false);

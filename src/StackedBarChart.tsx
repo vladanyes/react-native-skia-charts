@@ -11,14 +11,16 @@ import {
   useValue,
   Group,
   SkPath,
+  Text,
 } from '@shopify/react-native-skia';
 import { Easing } from 'react-native-reanimated';
 import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { max } from 'd3-array';
 import { stack } from 'd3-shape';
-import type { BarChartProps } from './types';
+import type { BarChartProps, FlattenDataType } from './types';
 import {
   getDataToStack,
+  getXLabel,
   // getMinMaxDate,
   // getXLabel,
   getXLabelsInterval,
@@ -38,7 +40,7 @@ export const StackedBarChart = memo(
     // isLoading,
     fontFile,
     fontSize = CHART_FONT_SIZE,
-    // labelsColor = 'black',
+    labelsColor = 'black',
     // startDate: startDateProp,
     // endDate: endDateProp,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
@@ -62,7 +64,7 @@ export const StackedBarChart = memo(
 
     const colorScale = scaleOrdinal().domain(stackKeys).range(stackColors);
 
-    const totalCount = datasets.length;
+    const totalCount = dataToStack.length;
     const xLabelsInterval = getXLabelsInterval(totalCount);
 
     const chartHeight = canvasHeight - paddingVertical;
@@ -168,6 +170,23 @@ export const StackedBarChart = memo(
               />
             ))}
           </Group>
+          {dataToStack.map((dataItem: FlattenDataType, idx: number) => (
+            <Group color={labelsColor} key={`${dataItem.date}-${idx}`}>
+              <Text
+                font={font}
+                // todo: remove ts-ignore
+                // @ts-ignore
+                x={xScale(dataItem.date)}
+                y={canvasHeight}
+                text={getXLabel({
+                  idx,
+                  date: dataItem.date,
+                  xLabelsInterval,
+                  totalCount,
+                })}
+              />
+            </Group>
+          ))}
         </Canvas>
       </View>
     );

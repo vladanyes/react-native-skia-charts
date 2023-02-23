@@ -13,8 +13,9 @@ import {
 } from '@shopify/react-native-skia';
 import { Easing } from 'react-native-reanimated';
 import { scaleLinear, scalePoint } from 'd3-scale';
+import { max } from 'd3-array';
 import type { BarChartProps, ChartPoint } from './types';
-import d3Max, { getMinMaxDate, getXLabel, getXLabelsInterval } from './helpers';
+import { getMinMaxDate, getXLabel, getXLabelsInterval } from './helpers';
 import {
   CHART_BAR_COLOR,
   CHART_BAR_WIDTH,
@@ -28,7 +29,6 @@ import {
 export const BarChart = memo(
   ({
     isLoading,
-    chartColor = CHART_BAR_COLOR,
     fontFile,
     fontSize = CHART_FONT_SIZE,
     labelsColor = 'black',
@@ -37,8 +37,10 @@ export const BarChart = memo(
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
     barWidth = CHART_BAR_WIDTH,
-    data = [],
+    datasets = [],
   }: BarChartProps) => {
+    // only the first item of datasets prop will be used, other items will be ignored.
+    const [{ data = [], color: chartColor = CHART_BAR_COLOR } = {}] = datasets;
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
     const animationState = useValue<number>(0);
@@ -72,7 +74,7 @@ export const BarChart = memo(
 
     const yScaleDomain = [
       0,
-      d3Max(data, (yDataPoint: ChartPoint) => yDataPoint.value),
+      max(data, (yDataPoint: ChartPoint) => yDataPoint.value),
     ];
     // @ts-ignore todo: fix types
     const yScale = scaleLinear().domain(yScaleDomain).range(yScaleBounds);
@@ -80,7 +82,7 @@ export const BarChart = memo(
     const animate = () => {
       animationState.current = 0;
       runTiming(animationState, 1, {
-        duration: 1600,
+        duration: 1000,
         easing: Easing.inOut(Easing.exp),
       });
     };
@@ -131,13 +133,12 @@ export const BarChart = memo(
         <Canvas style={canvasStyles}>
           <Path path={path} color={chartColor} />
           {data.map((dataPoint: ChartPoint, idx: number) => (
-            <Group color={labelsColor} key={`${dataPoint.date}-xAxis-bar`}>
+            <Group color={labelsColor} key={`${dataPoint.date}-${idx}`}>
               <Text
-                key={dataPoint.date.toString()}
                 font={font}
                 // todo: remove ts-ignore
                 // @ts-ignore
-                x={xScale(dataPoint.date) - 4}
+                x={xScale(dataPoint.date)}
                 y={canvasHeight}
                 text={getXLabel({
                   idx,

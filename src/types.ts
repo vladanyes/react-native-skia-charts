@@ -19,14 +19,10 @@ export interface Dataset {
 }
 
 export interface BarChartProps {
-  // todo: should be removed
-  chartColor?: string;
   fontFile: DataSourceParam;
   fontSize?: number;
   labelsColor?: string;
   tooltip?: TooltipProps;
-  // todo: should be removed
-  data: ChartPoint[];
   datasets?: Dataset[];
   barWidth?: number;
   startDate?: Date;
@@ -38,7 +34,6 @@ export interface BarChartProps {
 
 export interface LineChartProps {
   yAxisMax?: number;
-  chartColor?: string;
   startDate?: Date;
   endDate?: Date;
   isLoading?: boolean;
@@ -52,7 +47,7 @@ export interface LineChartProps {
   onTouchEnd?: (arg: boolean) => void;
   withTooltip?: boolean;
   tooltip?: TooltipProps;
-  data: ChartPoint[];
+  datasets?: Dataset[];
 }
 
 export interface TooltipProps {

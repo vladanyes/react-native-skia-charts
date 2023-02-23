@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
-import { LineChart, ChartPoint, BarChart, StackedBarChart } from '../../src';
+import { LineChart, BarChart, StackedBarChart } from '../../src';
 import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
-import {
-  generateRandomChartData,
-  generateRandomStackedChartData,
-} from './helpers';
+import { generateRandomStackedChartData } from './helpers';
 
 export default function App() {
-  const [points, setPoints] = React.useState<ChartPoint[]>(
-    generateRandomChartData(20)
-  );
+  const [_, setKey] = React.useState<number>(Math.random());
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -22,24 +17,21 @@ export default function App() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.buttonWrapper}>
-          <Button
-            title="upd chart"
-            onPress={() => setPoints(generateRandomChartData(30))}
-          />
+          <Button title="upd chart" onPress={() => setKey(Math.random())} />
         </View>
         <StackedBarChart
-          datasets={generateRandomStackedChartData(14)}
+          datasets={generateRandomStackedChartData(13)}
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
         />
         <View style={{ height: 10, width: '100%' }}></View>
         <BarChart
-          data={points}
+          datasets={generateRandomStackedChartData(10)}
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
         />
         <View style={{ height: 10, width: '100%' }}></View>
         <LineChart
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
-          data={points}
+          datasets={generateRandomStackedChartData(13)}
           // chartColor="red"
           // onTouchStart={() => {}}
           // onTouchEnd={() => {}}
