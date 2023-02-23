@@ -41,17 +41,67 @@ npm install react-native-skia-charts
 ## Usage
 
 ```jsx
-import { LineChart, ChartPoint } from 'react-native-skia-charts';
+import { LineChart, StackedBarChart } from 'react-native-skia-charts';
 // ...
 <LineChart
-  data={[{ date: '2021-01-01', value: 1 }, { date: '2021-01-02', value: 2 }, ... ]}
+  datasets={[{
+    label: 'Default line',
+    color: '#DE5C9D',
+    data: [
+      {
+        date: '2020-01-02',
+        value: 10,
+      },
+      {
+        date: '2020-01-03',
+        value: 20,
+      },
+      ...
+    ],
+  }]}
+  fontFile={require("../assets/fonts/Roboto-Regular.ttf")}
+/>
+// ...
+<StackedBarChart
+  datasets={[{
+    label: 'Line 1',
+    color: 'green',
+    data: [
+      {
+        date: '2020-01-02',
+        value: 10,
+      },
+      {
+        date: '2020-01-03',
+        value: 20,
+      },
+      ...
+    ],
+  },
+    {
+      label: 'Line 2',
+      color: 'black',
+      data: [
+        {
+          date: '2020-01-02',
+          value: 10,
+        },
+        {
+          date: '2020-01-03',
+          value: 20,
+        },
+        ...
+      ],
+    },
+      ...
+  ]}
   fontFile={require("../assets/fonts/Roboto-Regular.ttf")}
 />
 ```
 
 ## Configuration props
 
-### `data` (required)
+### `datasets` (required)
 
 The data to be displayed in the chart. The data should be an array of objects with a `date` and `value` properties.
 

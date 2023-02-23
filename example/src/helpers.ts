@@ -5,7 +5,7 @@ function addDays(daysToAdd: number): Date {
   result.setDate(result.getDate() + daysToAdd);
   return result;
 }
-const COLORS = ['#DE5C9D', '#1AA179', '#113994', '#FD9843'];
+const COLORS = ['#FD9843', '#DE5C9D', '#1AA179', '#113994'];
 
 export const generateRandomStackedChartData = (length: number) => {
   return Array<number>(length)
