@@ -14,3 +14,4 @@ export const CHART_TOOLTIP_BACKGROUND = 'brown';
 
 export const CHART_LINE_COLOR = '#feb236';
 export const CHART_BAR_COLOR = '#feb236';
+export const CHART_BAR_RADIUS = 8;
