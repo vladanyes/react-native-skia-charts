@@ -54,6 +54,7 @@ export const BarChart = memo(
 
     const chartHeight = canvasHeight - paddingVertical;
     const yScaleBounds = [paddingVertical, chartHeight] as const;
+
     const xScaleBounds = [
       paddingHorizontal,
       canvasWidth - paddingHorizontal,
@@ -70,7 +71,7 @@ export const BarChart = memo(
     const xScale = scalePoint()
       .domain(xScaleDomain)
       .range(xScaleBounds)
-      .padding(xLabelsInterval === 1 ? -1 : 0.5);
+      .padding(xLabelsInterval);
 
     const yScaleDomain = [
       0,
