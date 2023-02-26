@@ -66,6 +66,7 @@ import { LineChart, StackedBarChart } from 'react-native-skia-charts';
   datasets={[{
     label: 'Line 1',
     color: 'green',
+    borderRadius: 8,
     data: [
       {
         date: '2020-01-02',
@@ -136,6 +137,8 @@ If not provided, `endDate` will be calculated from `data` prop.
 ### `paddingHorizontal`
 
 ### `tooltip`
+
+### `borderRadius`
 
 ## Chart types
 
