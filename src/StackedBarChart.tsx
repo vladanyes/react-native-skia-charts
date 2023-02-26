@@ -27,6 +27,7 @@ import {
   // getYLabels,
 } from './helpers';
 import {
+  CHART_BAR_RADIUS,
   CHART_BAR_WIDTH,
   CHART_FONT_SIZE,
   CHART_HEIGHT,
@@ -47,6 +48,7 @@ export const StackedBarChart = memo(
     paddingVertical = CHART_VERTICAL_MARGIN,
     barWidth: barWidthProp = CHART_BAR_WIDTH,
     datasets = [],
+    borderRadius = CHART_BAR_RADIUS
   }: BarChartProps) => {
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
@@ -123,7 +125,7 @@ export const StackedBarChart = memo(
               yScale(subLayer[1] * barsAnimationState.current) * -1
             );
 
-            const rrect = Skia.RRectXY(rect, 8, 8);
+            const rrect = Skia.RRectXY(rect, borderRadius, borderRadius);
             path.addRRect(rrect);
           });
 
