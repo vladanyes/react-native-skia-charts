@@ -1,0 +1,48 @@
+{
+  "pluginId": "default",
+  "version": "current",
+  "label": "Next",
+  "banner": null,
+  "badge": false,
+  "noIndex": false,
+  "className": "docs-version-current",
+  "isLast": true,
+  "docsSidebars": {
+    "tutorialSidebar": [
+      {
+        "type": "category",
+        "label": "Getting-started",
+        "collapsible": true,
+        "collapsed": true,
+        "items": [
+          {
+            "type": "link",
+            "label": "Installation",
+            "href": "/docs/Getting-started/Installation",
+            "docId": "Getting-started/Installation"
+          }
+        ]
+      },
+      {
+        "type": "link",
+        "label": "react-native-skia-charts",
+        "href": "/docs/intro",
+        "docId": "intro"
+      }
+    ]
+  },
+  "docs": {
+    "Getting-started/Installation": {
+      "id": "Getting-started/Installation",
+      "title": "Installation",
+      "description": "",
+      "sidebar": "tutorialSidebar"
+    },
+    "intro": {
+      "id": "intro",
+      "title": "react-native-skia-charts",
+      "description": "High-performance charts for react-native 🚀",
+      "sidebar": "tutorialSidebar"
+    }
+  }
+}
