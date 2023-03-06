@@ -29,8 +29,8 @@ npm run example:android
 
 <pre>
 npm install <a href="https://github.com/d3/d3-scale">d3-scale</a>
-npm install <a href="https://github.com/d3/d3-shape">d3-shape</a>
-npm install <a href="https://github.com/d3/d3-array">d3-array</a>
+npm install <a href="https://github.com/d3/d3-shape">d3-shape</a> // will be removed soon
+npm install <a href="https://github.com/d3/d3-array">d3-array</a> // will be removed soon
 npm install <a href="https://github.com/iamkun/dayjs">dayjs</a> // will be removed soon
 npm install <a href="https://github.com/software-mansion/react-native-reanimated">react-native-reanimated</a>
 npm install <a href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</a>
