@@ -8,13 +8,12 @@ import {
   runTiming,
   Skia,
   Text,
+  useComputedValue,
   useFont,
   useSharedValueEffect,
   useValue,
 } from '@shopify/react-native-skia';
-import { scaleLinear } from 'd3-scale';
-import { curveCardinal, line } from 'd3-shape';
-import dayjs from 'dayjs';
+import { scaleLinear, scalePoint } from 'd3-scale';
 import {
   CHART_FONT_SIZE,
   CHART_HEIGHT,
@@ -23,55 +22,48 @@ import {
   CHART_VERTICAL_MARGIN,
   CHART_WIDTH,
 } from './constants';
-import {
-  getMaxYValue,
-  getMinMaxDate,
-  getXLabel,
-  getXLabelsInterval,
-  getYLabels,
-} from './helpers';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, Easing } from 'react-native-reanimated';
-import type { ChartPoint, LineChartProps } from './types';
+import type { LineChartProps } from './types';
 import { usePanGesture } from './hooks/usePanGesture';
-import LineChartTooltip from './LineChartTooltip';
 
 // fontMedium,
 export const LineChart = memo(
   ({
     yAxisMax: yAxisMaxProp,
     labelsColor = 'black',
-    isLoading,
-    startDate: startDateProp,
-    endDate: endDateProp,
+    // isLoading,
+    // startDate: startDateProp,
+    // endDate: endDateProp,
     fontSize = CHART_FONT_SIZE,
     fontFile,
     paddingHorizontal = CHART_HORIZONTAL_MARGIN,
     paddingVertical = CHART_VERTICAL_MARGIN,
-    tension = 0.5,
+    // tension = 0.5,
     onTouchStart,
     onTouchEnd,
-    withTooltip = true,
-    tooltip,
+    // withTooltip = true,
+    // tooltip,
     datasets = [],
   }: LineChartProps) => {
     // only the first item of datasets prop will be used, other items will be ignored.
     const [{ data = [], color: chartColor = CHART_LINE_COLOR } = {}] = datasets;
     const [canvasWidth, setCanvasWidth] = useState(CHART_WIDTH);
     const [canvasHeight, setCanvasHeight] = useState(CHART_HEIGHT);
-    const [isTouchActive, setIsTouchActive] = useState<boolean>(false);
+    const [, setIsTouchActive] = useState<boolean>(false);
     const skiaX = useValue(0);
 
     // define chart boundaries
-    const startDate = startDateProp || getMinMaxDate(data, 'min');
-    const endDate = endDateProp || getMinMaxDate(data, 'max');
-    const yAxisMax = yAxisMaxProp || getMaxYValue(data);
+    // const startDate = startDateProp || getMinMaxDate(data, 'min');
+    // const endDate = endDateProp || getMinMaxDate(data, 'max');
+    // const yAxisMax = yAxisMaxProp || getMaxYValue(data);
 
     const xScaleBounds = [
       paddingHorizontal,
       canvasWidth - paddingHorizontal,
     ] as const;
     const chartHeight = canvasHeight - paddingVertical;
+    const yScaleBounds = [chartHeight, paddingVertical] as const;
     const canvasStyles = {
       width: canvasWidth,
       height: canvasHeight,
@@ -85,8 +77,6 @@ export const LineChart = memo(
       xScaleBounds,
     });
     const font = useFont(fontFile, fontSize);
-
-    const yLabels = getYLabels(yAxisMax);
 
     const onLayout = useCallback(
       ({ nativeEvent: { layout } }: LayoutChangeEvent) => {
@@ -121,19 +111,54 @@ export const LineChart = memo(
       skiaX.current = reanimatedX.value;
     }, reanimatedX);
 
+    const xScale = scalePoint()
+      .domain(data.map((d) => d.x.toString()))
+      .range(xScaleBounds)
+      .align(0);
+
+    const yScaleDomain = [0, yAxisMaxProp || Math.max(...data.map((d) => d.y))];
+    const yScale = scaleLinear().domain(yScaleDomain).range(yScaleBounds);
+    const scaledData = data.map((d) => ({
+      x: xScale(d.x.toString())!,
+      y: yScale(d.y),
+    }));
+
+    const linePath = useComputedValue(() => {
+      const newPath = Skia.Path.Make();
+
+      for (let i = 0; i < scaledData.length; i++) {
+        const point = scaledData[i]!;
+
+        if (i === 0) newPath.moveTo(point.x, point.y);
+
+        const prev = scaledData[i - 1];
+        const prevPrev = scaledData[i - 2];
+        if (prev == null) continue;
+        const p0 = prevPrev ?? prev;
+        const p1 = prev;
+        const cp1x = (2 * p0.x + p1.x) / 3;
+        const cp1y = (2 * p0.y + p1.y) / 3;
+        const cp2x = (p0.x + 2 * p1.x) / 3;
+        const cp2y = (p0.y + 2 * p1.y) / 3;
+        const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
+        const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
+
+        // Adds cubic from last point towards (x1, y1),
+        //   then towards (x2, y2), ending at (x3, y3).
+        newPath.cubicTo(cp1x, cp1y, cp2x, cp2y, cp3x, cp3y);
+
+        if (i === scaledData.length - 1) {
+          newPath.cubicTo(point.x, point.y, point.x, point.y, point.x, point.y);
+        }
+      }
+
+      return newPath;
+    }, [scaledData]);
+
     const lineAnimationState = useValue<number>(0);
     // having this value we are preventing re-starting line chart animation
     // if it's already started
     const isLineAnimationRunning = useRef<boolean>(false);
-    const totalCount = data.length;
-    const xLabelsInterval = getXLabelsInterval(totalCount);
-
-    // scales
-    const xScale = scaleLinear()
-      .domain([dayjs(startDate).valueOf(), dayjs(endDate).valueOf()])
-      .range(xScaleBounds);
-    const yScale = scaleLinear().domain([0, yAxisMax]).range([chartHeight, 15]);
-
     const animateLine = () => {
       lineAnimationState.current = 0;
       runTiming(
@@ -151,55 +176,31 @@ export const LineChart = memo(
 
     useEffect(() => {
       // this useEffect is responsible for toggling chart
-      if (!isLoading && !isLineAnimationRunning.current) {
+      if (!isLineAnimationRunning.current) {
         lineAnimationState.current = 0;
         isLineAnimationRunning.current = true;
         setTimeout(animateLine, 0);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [startDate, isLoading]);
-
-    const curvedLine = data.length
-      ? line<ChartPoint>()
-          .x((d) => xScale(dayjs(d.date).valueOf()))
-          .y((d) => yScale(d.value))
-          .curve(curveCardinal.tension(tension))(data)
-      : '';
-
-    const chartPath = Skia.Path.MakeFromSVGString(curvedLine!);
+    }, [data]);
 
     return (
       <GestureDetector gesture={gesture}>
         <View style={{ flex: 1 }} onLayout={onLayout}>
           <Canvas style={canvasStyles}>
-            {!isLoading && chartPath && (
-              <Path
-                style="stroke"
-                path={chartPath}
-                strokeWidth={3}
-                strokeJoin="round"
-                strokeCap="round"
-                color={chartColor}
-                start={0}
-                end={lineAnimationState}
-              />
-            )}
-
             {font ? (
               <Group>
-                {yLabels.map((label: string | number, idx: number, array) => {
-                  const isString = typeof label === 'string';
-                  const isLastItem = idx === array.length - 1;
-                  const yPoint = isString ? yScale(0) : yScale(label);
-
+                {yScale.ticks(6).map((label: number, idx: number) => {
+                  const yPoint = yScale(label);
+                  // https://stackoverflow.com/questions/51497534/how-to-force-a-specific-amount-of-y-axis-ticks-in-d3-charts
                   return (
-                    <Group key={label}>
+                    <Group key={label + idx.toString()}>
                       <Text
                         color={labelsColor}
                         font={font}
                         x={0}
-                        y={isLastItem ? yPoint + 3 : yPoint}
-                        text={isString ? label : label.toFixed(1)}
+                        y={yPoint}
+                        text={label.toString()}
                       />
                       <Path
                         color="lightgrey"
@@ -217,36 +218,29 @@ export const LineChart = memo(
 
             {font ? (
               <Group>
-                {data.map((dataPoint, idx: number) => (
-                  <Group color={labelsColor} key={`${dataPoint.date}-xAxis`}>
+                {xScale.domain().map((label, idx: number) => (
+                  <Group color={labelsColor} key={label + idx.toString()}>
                     <Text
                       font={font}
-                      x={xScale(dayjs(dataPoint.date).valueOf()) - 4}
+                      x={xScale(label)}
                       y={canvasHeight}
-                      text={getXLabel({
-                        idx,
-                        date: dataPoint.date,
-                        xLabelsInterval,
-                        totalCount,
-                      })}
+                      text={label.toString()}
                     />
                   </Group>
                 ))}
               </Group>
             ) : null}
 
-            {withTooltip && isTouchActive ? (
-              <LineChartTooltip
-                {...tooltip}
-                data={data}
-                x={skiaX}
-                xScaleBounds={xScaleBounds}
-                chartHeight={chartHeight}
-                font={font}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            ) : null}
+            <Path
+              style="stroke"
+              path={linePath}
+              strokeWidth={3}
+              strokeJoin="round"
+              strokeCap="round"
+              color={chartColor}
+              start={0}
+              end={lineAnimationState}
+            />
           </Canvas>
         </View>
       </GestureDetector>

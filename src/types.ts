@@ -7,8 +7,8 @@ import type {
 } from '@shopify/react-native-skia';
 
 export interface ChartPoint {
-  value: number;
-  date: Date;
+  x: string;
+  y: number;
 }
 
 export interface Dataset {
@@ -21,6 +21,7 @@ export interface Dataset {
 export interface BarChartProps {
   fontFile: DataSourceParam;
   fontSize?: number;
+  yAxisMax?: number;
   labelsColor?: string;
   tooltip?: TooltipProps;
   datasets?: Dataset[];
