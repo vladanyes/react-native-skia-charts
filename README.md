@@ -100,9 +100,9 @@ If not provided, `endDate` will be calculated from `data` prop.
 ## Chart types
 
 - Line chart (draft state)
-- Tooltip (draft state)
+- Tooltip (todo)
 - Bar chart (draft state)
-- Stacked Bar chart (draft state)
+- Stacked Bar chart (todo)
 - Multiple lines chart (todo)
 - Donut chart (todo)
 
