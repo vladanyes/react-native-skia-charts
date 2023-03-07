@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
-import { LineChart, BarChart, StackedBarChart } from '../../src';
+import { LineChart, BarChart } from 'react-native-skia-charts';
 import {
   GestureHandlerRootView,
   ScrollView,
 } from 'react-native-gesture-handler';
-import { generateRandomStackedChartData } from './helpers';
+import { generateRandomChartData } from './helpers';
 
 export default function App() {
-  const [_, setKey] = React.useState<number>(Math.random());
+  const [data, setData] = React.useState(generateRandomChartData(13));
+  const randomNumber = Math.floor(Math.random() * (15 - 10 + 1) + 10);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -17,21 +18,14 @@ export default function App() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.buttonWrapper}>
-          <Button title="upd chart" onPress={() => setKey(Math.random())} />
+          <Button
+            title="upd chart"
+            onPress={() => setData(generateRandomChartData(randomNumber))}
+          />
         </View>
-        <StackedBarChart
-          datasets={generateRandomStackedChartData(13)}
-          fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
-        />
-        <View style={{ height: 10, width: '100%' }}></View>
-        <BarChart
-          datasets={generateRandomStackedChartData(10)}
-          fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
-        />
-        <View style={{ height: 10, width: '100%' }}></View>
         <LineChart
           fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
-          datasets={generateRandomStackedChartData(13)}
+          datasets={[{ data, color: 'orange', label: 'line chart' }]}
           // chartColor="red"
           // onTouchStart={() => {}}
           // onTouchEnd={() => {}}
@@ -44,6 +38,11 @@ export default function App() {
           // tooltip={{
           //   width: 60,
           // }}
+        />
+        <View style={{ height: 30, width: '100%' }}></View>
+        <BarChart
+          datasets={[{ data, color: 'orange', label: 'bar chart' }]}
+          fontFile={require('../assets/fonts/Roboto-Regular.ttf')}
         />
       </ScrollView>
     </GestureHandlerRootView>
@@ -67,6 +66,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 50,
     marginLeft: 50,
-    marginBottom: 15,
+    marginBottom: 55,
   },
 });

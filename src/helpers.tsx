@@ -9,28 +9,27 @@ import type {
 import { groups } from 'd3-array';
 // import { MIN_PLACEHOLDERS_COUNT } from './constants';
 
-export const getMinMaxDate = (data: ChartPoint[], type = 'min'): Date => {
-  const dateType = type === 'min' ? 'isBefore' : 'isAfter';
-
-  if (!data.length) return new Date();
-
-  const minMaxPoint = data.reduce(
-    (a: ChartPoint, b: ChartPoint): ChartPoint =>
-      dayjs(a.date)[dateType](dayjs(b.date)) ? a : b
-  );
-  return minMaxPoint?.date;
-};
+// export const getMinMaxDate = (data: ChartPoint[], type = 'min'): Date => {
+//   const dateType = type === 'min' ? 'isBefore' : 'isAfter';
+//
+//   if (!data.length) return new Date();
+//
+//   const minMaxPoint = data.reduce(
+//     (a: ChartPoint, b: ChartPoint): ChartPoint =>
+//       dayjs(a.x)[dateType](dayjs(b.x)) ? a : b
+//   );
+//   return minMaxPoint?.x;
+// };
 
 export const getMaxYValue = (data: ChartPoint[] = []): number => {
   const maxPoint = data.reduce(
-    (acc: ChartPoint, b: ChartPoint): ChartPoint =>
-      acc.value > b.value ? acc : b
+    (acc: ChartPoint, b: ChartPoint): ChartPoint => (acc.y > b.y ? acc : b)
   );
   const [item1, item2] = data;
   // @ts-ignore
-  const diff = item1?.value - item2?.value;
+  const diff = item1?.y - item2?.y;
 
-  return maxPoint?.value + (diff || 1);
+  return maxPoint?.y + (diff || 1);
 };
 
 export const getXLabelsInterval = (totalXGraphCount: number): number => {
@@ -97,6 +96,38 @@ export const getXLabel = ({
   }
 };
 
+// this function is taken from d3-array
+// https://github.com/d3/d3-array/blob/main/src/max.js
+export default function d3Max(
+  values: ChartPoint[],
+  valueof: ((arg0: any, arg1: number, arg2: any) => any) | undefined
+) {
+  let max;
+  if (valueof === undefined) {
+    for (const value of values) {
+      if (
+        value != null &&
+        // @ts-ignore todo: fix types
+        (max < value || (max === undefined && value >= value))
+      ) {
+        max = value;
+      }
+    }
+  } else {
+    let index = -1;
+    for (let value of values) {
+      if (
+        (value = valueof(value, ++index, values)) != null &&
+        // @ts-ignore todo: fix types
+        (max < value || (max === undefined && value >= value))
+      ) {
+        max = value;
+      }
+    }
+  }
+  return max;
+}
+
 // // sample of PoolLineDailyUsageFormatted:
 // //   {"date": "2022-09-16", "18931943440": 0.08, "3576721372": 0.1}
 // export type PoolLineDailyUsageFormatted = {
@@ -142,8 +173,8 @@ export const getDataToStack = (datasets: Dataset[]): CombinedDataType[] => {
   const flattenData = datasets.flatMap((dataset) => {
     return dataset.data.map((dataPoint) => {
       return {
-        date: new Date(dataPoint.date),
-        [dataset.label]: Number(dataPoint.value),
+        date: new Date(dataPoint.x),
+        [dataset.label]: Number(dataPoint.y),
       };
     });
   });

@@ -8,10 +8,8 @@
 # Example
 
 <div>
-  <img src="img/line-chart.gif" width="300" />
-  <img src="img/bar-chart.gif" width="300" />
+  <img src="img/charts.gif" width="300" />
 </div>
-<img src="img/stacked-bar-chart.gif" width="300" />
 
 Clone the repo and run one of the following commands to run the example app:
 
@@ -29,9 +27,6 @@ npm run example:android
 
 <pre>
 npm install <a href="https://github.com/d3/d3-scale">d3-scale</a>
-npm install <a href="https://github.com/d3/d3-shape">d3-shape</a>
-npm install <a href="https://github.com/d3/d3-array">d3-array</a>
-npm install <a href="https://github.com/iamkun/dayjs">dayjs</a>
 npm install <a href="https://github.com/software-mansion/react-native-reanimated">react-native-reanimated</a>
 npm install <a href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</a>
 npm install <a href="https://github.com/Shopify/react-native-skia">@shopify/react-native-skia</a>
@@ -49,55 +44,19 @@ import { LineChart, StackedBarChart } from 'react-native-skia-charts';
     color: '#DE5C9D',
     data: [
       {
-        date: '2020-01-02',
-        value: 10,
+        x: '2020-01-02',
+        y: 10,
       },
       {
-        date: '2020-01-03',
-        value: 20,
+        x: '2020-01-03',
+        y: 20,
       },
       ...
     ],
   }]}
   fontFile={require("../assets/fonts/Roboto-Regular.ttf")}
 />
-// ...
-<StackedBarChart
-  datasets={[{
-    label: 'Line 1',
-    color: 'green',
-    borderRadius: 8,
-    data: [
-      {
-        date: '2020-01-02',
-        value: 10,
-      },
-      {
-        date: '2020-01-03',
-        value: 20,
-      },
-      ...
-    ],
-  },
-    {
-      label: 'Line 2',
-      color: 'black',
-      data: [
-        {
-          date: '2020-01-02',
-          value: 10,
-        },
-        {
-          date: '2020-01-03',
-          value: 20,
-        },
-        ...
-      ],
-    },
-      ...
-  ]}
-  fontFile={require("../assets/fonts/Roboto-Regular.ttf")}
-/>
+
 ```
 
 ## Configuration props
@@ -143,9 +102,9 @@ If not provided, `endDate` will be calculated from `data` prop.
 ## Chart types
 
 - Line chart (draft state)
-- Tooltip (draft state)
+- Tooltip (todo)
 - Bar chart (draft state)
-- Stacked Bar chart (draft state)
+- Stacked Bar chart (todo)
 - Multiple lines chart (todo)
 - Donut chart (todo)
 
