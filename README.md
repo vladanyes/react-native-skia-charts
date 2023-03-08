@@ -97,6 +97,8 @@ If not provided, `endDate` will be calculated from `data` prop.
 
 ### `tooltip`
 
+### `borderRadius`
+
 ## Chart types
 
 - Line chart (draft state)

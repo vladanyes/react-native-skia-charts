@@ -23,6 +23,7 @@ import {
   CHART_HORIZONTAL_MARGIN,
   CHART_VERTICAL_MARGIN,
   CHART_WIDTH,
+  CHART_BAR_RADIUS,
 } from './constants';
 
 export const BarChart = memo(
@@ -38,6 +39,7 @@ export const BarChart = memo(
     paddingVertical = CHART_VERTICAL_MARGIN,
     barWidth: barWidthProp = CHART_BAR_WIDTH,
     datasets = [],
+    borderRadius = CHART_BAR_RADIUS,
   }: BarChartProps) => {
     // only the first item of datasets prop will be used, other items will be ignored.
     const [{ data = [], color: chartColor = CHART_BAR_COLOR } = {}] = datasets;
@@ -89,7 +91,6 @@ export const BarChart = memo(
 
     const path = useComputedValue(() => {
       const newPath = Skia.Path.Make();
-
       data.forEach((dataPoint: ChartPoint) => {
         const rect = Skia.XYWHRect(
           xScale(dataPoint.x)! - barWidthProp / 2,
@@ -98,7 +99,7 @@ export const BarChart = memo(
           yScale(dataPoint.y * animationState.current) * -1
         );
 
-        const rrect = Skia.RRectXY(rect, 8, 8);
+        const rrect = Skia.RRectXY(rect, borderRadius, borderRadius);
         newPath.addRRect(rrect);
       });
 

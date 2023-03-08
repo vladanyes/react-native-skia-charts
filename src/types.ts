@@ -31,6 +31,7 @@ export interface BarChartProps {
   isLoading?: boolean;
   paddingHorizontal?: number;
   paddingVertical?: number;
+  borderRadius?: number;
 }
 
 export interface LineChartProps {
