@@ -143,12 +143,44 @@ export const LineChart = memo(
         const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
         const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
 
-        // Adds cubic from last point towards (x1, y1),
-        //   then towards (x2, y2), ending at (x3, y3).
-        newPath.cubicTo(cp1x, cp1y, cp2x, cp2y, cp3x, cp3y);
+        // http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
+        // https://www.youtube.com/watch?v=uQbqB8J7Ua0
+        // https://github.com/flutter/flutter/issues/13088
 
-        if (i === scaledData.length - 1) {
-          newPath.cubicTo(point.x, point.y, point.x, point.y, point.x, point.y);
+        if (i !== scaledData.length - 1) {
+          // Adds cubic from last point towards (x1, y1),
+          //   then towards (x2, y2), ending at (x3, y3).
+          newPath.cubicTo(cp1x, cp1y, cp2x, cp2y, cp3x, cp3y);
+        } else {
+          // draws the last piece of the chart
+          // newPath.cubicTo(
+          //   (p1.x + point.x) / 2,
+          //   p1.y,
+          //   (p1.x + point.x) / 2,
+          //   point.y,
+          //   point.x,
+          //   point.y
+          // );
+
+          // newPath.cubicTo(
+          //   cp1x,
+          //   cp1y,
+          //   (p1.x + point.x) / 2,
+          //   (p1.y + point.y) / 2,
+          //   point.x,
+          //   point.y
+          // );
+
+          // newPath.cubicTo(point.x, point.y, point.x, point.y, point.x, point.y);
+
+          newPath.cubicTo(
+            p1.x,
+            p1.y,
+            (p1.x + point.x) / 2,
+            (p1.y + point.y) / 2,
+            point.x,
+            point.y
+          );
         }
       }
 
