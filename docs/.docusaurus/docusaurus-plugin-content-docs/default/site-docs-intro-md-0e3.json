@@ -1,0 +1,20 @@
+{
+  "unversionedId": "intro",
+  "id": "intro",
+  "title": "react-native-skia-charts",
+  "description": "High-performance charts for react-native 🚀",
+  "source": "@site/docs/intro.md",
+  "sourceDirName": ".",
+  "slug": "/intro",
+  "permalink": "/docs/intro",
+  "draft": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/intro.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Installation",
+    "permalink": "/docs/Getting-started/Installation"
+  }
+}

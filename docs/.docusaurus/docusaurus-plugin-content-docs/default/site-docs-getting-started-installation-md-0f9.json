@@ -1,0 +1,20 @@
+{
+  "unversionedId": "Getting-started/Installation",
+  "id": "Getting-started/Installation",
+  "title": "Installation",
+  "description": "",
+  "source": "@site/docs/Getting-started/Installation.md",
+  "sourceDirName": "Getting-started",
+  "slug": "/Getting-started/Installation",
+  "permalink": "/docs/Getting-started/Installation",
+  "draft": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Getting-started/Installation.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "react-native-skia-charts",
+    "permalink": "/docs/intro"
+  }
+}
